@@ -1,0 +1,25 @@
+#podlove-assemblyai-metabox {
+    padding: 12px;
+}
+
+.podlove-assemblyai-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.podlove-assemblyai-success {
+    color: #00a32a;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.podlove-assemblyai-error {
+    color: #d63638;
+    margin-bottom: 8px;
+}
+
+.podlove-assemblyai-disabled-hint {
+    color: #646970;
+    font-style: italic;
+}
