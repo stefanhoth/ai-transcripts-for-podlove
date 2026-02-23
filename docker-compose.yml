@@ -1,0 +1,65 @@
+services:
+  db:
+    image: mysql:latest
+    container_name: podlove-assemblyai-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_ROOT_PASSWORD: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+    expose:
+      - 3306
+    networks:
+      - app-network
+    healthcheck:
+      test: mysqladmin ping -h localhost -u wordpress -pwordpress
+      interval: 5s
+      retries: 10
+
+  wordpress:
+    image: wordpress:6-php8.1-apache
+    container_name: podlove-assemblyai-wp
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DEBUG: "1"
+    volumes:
+      # Mount podlove-publisher (default/upstream version from sibling directory)
+      - ../podlove-publisher/dist:/var/www/html/wp-content/plugins/podlove-podcasting-plugin-for-wordpress
+      # Mount this plugin
+      - .:/var/www/html/wp-content/plugins/podlove-assemblyai
+    networks:
+      - app-network
+
+  wpcli:
+    image: wordpress:cli
+    container_name: podlove-assemblyai-wpcli
+    depends_on:
+      wordpress:
+        condition: service_started
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+    volumes_from:
+      - wordpress
+    networks:
+      - app-network
+    # Keep container running so we can exec wp commands
+    entrypoint: ["sh", "-c", "sleep infinity"]
+    profiles:
+      - tools
+
+networks:
+  app-network:
+    driver: bridge
