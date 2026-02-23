@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Settings fixture</title>
+  <style>
+    /* Minimal WordPress admin table styles */
+    .wp-list-table { border-collapse: collapse; width: 100%; }
+    .wp-list-table th, .wp-list-table td { padding: 4px 8px; border: 1px solid #ccc; }
+    .button { cursor: pointer; }
+    .button-primary { font-weight: bold; }
+    .check-column { width: 2em; }
+  </style>
+</head>
+<body>
+
+<!-- Container expected by settings.js -->
+<div id="podlove-assemblyai-batch"></div>
+
+<script>
+  /**
+   * Fixture helper — call window.__initSettings(overrides) from Playwright
+   * to configure and (re-)load settings.js for each test scenario.
+   *
+   * REST calls are intercepted via page.route() in the test file.
+   */
+  window.__initSettings = function (overrides) {
+    var container = document.getElementById('podlove-assemblyai-batch');
+    if (container) container.innerHTML = '';
+
+    window.podloveAssemblyAISettings = Object.assign(
+      {
+        restBase: 'http://localhost:8080/wp-json/podlove-assemblyai/v1',
+        nonce: 'test-nonce-1234',
+        i18n: {
+          loading:       'Loading episodes…',
+          noEpisodes:    'No episodes found.',
+          selectAll:     'Select all',
+          selectWithout: 'Select without transcript',
+          deselectAll:   'Deselect all',
+          transcribe:    'Transcribe selected',
+          cancel:        'Cancel',
+          yes:           'Yes',
+          no:            'No',
+          idle:          'Idle',
+          processing:    'Processing',
+          completed:     'Completed',
+          failed:        'Failed',
+          batchProgress: 'Processing %current% of %total%',
+          batchDone:     'Done!',
+        },
+      },
+      overrides || {}
+    );
+
+    // Remove previously loaded script so the IIFE re-executes fresh.
+    var old = document.getElementById('settings-script');
+    if (old) old.remove();
+
+    return new Promise(function (resolve, reject) {
+      var script = document.createElement('script');
+      script.id  = 'settings-script';
+      script.src = '../../../assets/js/settings.js';
+      script.onload  = resolve;
+      script.onerror = reject;
+      document.body.appendChild(script);
+    });
+  };
+</script>
+
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Metabox fixture</title>
+  <style>
+    /* Minimal WordPress admin stubs so the JS can reference them */
+    .spinner { display: inline-block; width: 20px; height: 20px; }
+    .spinner.is-active { visibility: visible; }
+    .button { cursor: pointer; }
+    .button-primary { font-weight: bold; }
+    .podlove-assemblyai-success { color: green; }
+    .podlove-assemblyai-error   { color: red; }
+  </style>
+</head>
+<body>
+
+<!-- Container expected by metabox.js -->
+<div id="podlove-assemblyai-metabox"></div>
+
+<script>
+  /**
+   * This fixture exposes a helper so Playwright tests can configure the
+   * metabox for each scenario by calling:
+   *
+   *   window.__initMetabox(overrides)
+   *
+   * before (re-)loading the metabox script. The helper merges the provided
+   * overrides with sensible defaults and then dynamically loads metabox.js
+   * so the IIFE re-executes with the new config.
+   *
+   * Default REST base is intercepted via Playwright's page.route(), so the
+   * value here only needs to match the interception pattern.
+   */
+  window.__initMetabox = function (overrides) {
+    // Reset container innerHTML so any previous render is cleared.
+    var container = document.getElementById('podlove-assemblyai-metabox');
+    if (container) container.innerHTML = '';
+
+    window.podloveAssemblyAI = Object.assign(
+      {
+        postId: 42,
+        restBase: 'http://localhost:8080/wp-json/podlove-assemblyai/v1',
+        nonce: 'test-nonce-1234',
+        initialStatus: null,
+        i18n: {
+          startTranscription: 'Start Transcription',
+          submitting:         'Submitting…',
+          transcribing:       'Transcribing',
+          importing:          'Importing…',
+          imported:           'Transcript imported',
+          error:              'An error occurred.',
+          retry:              'Retry',
+          transcribeAgain:    'Transcribe again',
+          confirmReplace:     'Replace existing transcript?',
+          queued:             'queued',
+          processing:         'processing',
+          completed:          'completed',
+        },
+      },
+      overrides || {}
+    );
+
+    // Remove any previously loaded metabox script so the browser re-executes
+    // the IIFE fresh each time.
+    var old = document.getElementById('metabox-script');
+    if (old) old.remove();
+
+    return new Promise(function (resolve, reject) {
+      var script = document.createElement('script');
+      script.id  = 'metabox-script';
+      // Path is relative — served by Playwright's file:// or http server.
+      script.src = '../../../assets/js/metabox.js';
+      script.onload  = resolve;
+      script.onerror = reject;
+      document.body.appendChild(script);
+    });
+  };
+</script>
+
+</body>
+</html>
