@@ -28,23 +28,49 @@ require_once PODLOVE_ASSEMBLYAI_DIR . 'inc/MetaBox.php';
 require_once PODLOVE_ASSEMBLYAI_DIR . 'inc/SettingsPage.php';
 
 /**
- * Check if Podlove Publisher is active and has the Transcripts module enabled.
+ * Check if Podlove Publisher is active with the required modules.
+ *
+ * Returns an empty array when all dependencies are met, or a list of
+ * human-readable problems otherwise.
  */
 function podlove_assemblyai_check_dependencies() {
-    return class_exists('\\Podlove\\Model\\Episode')
-        && class_exists('\\Podlove\\Modules\\Transcripts\\Transcripts');
+    $problems = [];
+
+    if (!class_exists('\\Podlove\\Model\\Episode')) {
+        $problems[] = 'Podlove Publisher is not active.';
+        return $problems;
+    }
+
+    if (!class_exists('\\Podlove\\Modules\\Base')) {
+        $problems[] = 'Podlove Publisher module system not found.';
+        return $problems;
+    }
+
+    if (!\Podlove\Modules\Base::is_active('transcripts')) {
+        $problems[] = 'The Podlove "Transcripts" module must be enabled.';
+    }
+
+    if (!\Podlove\Modules\Base::is_active('contributors')) {
+        $problems[] = 'The Podlove "Contributors" module must be enabled (required by Transcripts).';
+    }
+
+    return $problems;
 }
 
 /**
- * Show admin notice when Podlove Publisher is not active.
+ * Show admin notice when dependencies are not met.
  */
 function podlove_assemblyai_missing_dependency_notice() {
-    if (podlove_assemblyai_check_dependencies()) {
+    $problems = podlove_assemblyai_check_dependencies();
+
+    if (empty($problems)) {
         return;
     }
 
-    $message = __('Podlove AssemblyAI requires Podlove Publisher with the Transcripts module enabled.', 'podlove-assemblyai');
-    printf('<div class="notice notice-error"><p>%s</p></div>', esc_html($message));
+    echo '<div class="notice notice-error"><p>';
+    echo '<strong>' . esc_html__('Podlove AssemblyAI', 'podlove-assemblyai') . ':</strong> ';
+    echo esc_html(implode(' ', $problems));
+    echo '</p></div>';
 }
 add_action('admin_notices', 'podlove_assemblyai_missing_dependency_notice');
 
@@ -52,7 +78,7 @@ add_action('admin_notices', 'podlove_assemblyai_missing_dependency_notice');
  * Initialize the plugin after all plugins have loaded.
  */
 function podlove_assemblyai_init() {
-    if (!podlove_assemblyai_check_dependencies()) {
+    if (!empty(podlove_assemblyai_check_dependencies())) {
         return;
     }
 
