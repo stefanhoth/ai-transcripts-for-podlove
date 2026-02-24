@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Podlove AssemblyAI 1.0.7\n"
 "Report-Msgid-Bugs-To: https://github.com/stefanhoth/podlove-assemblyai/"
 "issues\n"
-"POT-Creation-Date: 2026-02-24 15:04+0100\n"
+"POT-Creation-Date: 2026-02-24 15:24+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,10 +17,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#: podlove-assemblyai.php:71 inc/SettingsPage.php:24 inc/SettingsPage.php:218
-msgid "Podlove AssemblyAI"
-msgstr ""
 
 #: inc/MetaBox.php:22
 msgid "AssemblyAI Transcription"
@@ -82,6 +78,10 @@ msgstr ""
 
 #: inc/MetaBox.php:70
 msgid "processing"
+msgstr ""
+
+#: inc/SettingsPage.php:24 inc/SettingsPage.php:227 podlove-assemblyai.php:71
+msgid "Podlove AssemblyAI"
 msgstr ""
 
 #: inc/SettingsPage.php:25
@@ -148,7 +148,7 @@ msgstr ""
 msgid "No episodes found."
 msgstr ""
 
-#: inc/SettingsPage.php:170 inc/SettingsPage.php:258
+#: inc/SettingsPage.php:170 inc/SettingsPage.php:238
 msgid "Loading episodes..."
 msgstr ""
 
@@ -178,25 +178,25 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: inc/SettingsPage.php:222 inc/SettingsPage.php:229
+#: inc/SettingsPage.php:232
+msgid "Batch Transcription"
+msgstr ""
+
+#: inc/SettingsPage.php:234
+msgid ""
+"Select episodes to transcribe in batch. Episodes are processed one at a time."
+msgstr ""
+
+#: inc/SettingsPage.php:245 inc/SettingsPage.php:254 inc/SettingsPage.php:276
+#: inc/SettingsPage.php:283
 msgid "API Key"
 msgstr ""
 
-#. translators: %s: link to assemblyai.com
-#: inc/SettingsPage.php:239
+#: inc/SettingsPage.php:264 inc/SettingsPage.php:292
 #, php-format
 msgid "Get your API key at %s"
 msgstr ""
 
-#: inc/SettingsPage.php:247
+#: inc/SettingsPage.php:272 inc/SettingsPage.php:300
 msgid "Save"
-msgstr ""
-
-#: inc/SettingsPage.php:252
-msgid "Batch Transcription"
-msgstr ""
-
-#: inc/SettingsPage.php:254
-msgid ""
-"Select episodes to transcribe in batch. Episodes are processed one at a time."
 msgstr ""

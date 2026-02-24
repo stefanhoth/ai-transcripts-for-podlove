@@ -213,42 +213,22 @@ class SettingsPage
             .podlove-assemblyai-confirm p {
                 margin: 0 0 12px;
             }
+            .podlove-assemblyai-api-key-details summary {
+                cursor: pointer;
+                font-size: 1.3em;
+                font-weight: 600;
+                padding: 8px 0;
+            }
+            .podlove-assemblyai-api-key-details summary::-webkit-details-marker {
+                margin-right: 8px;
+            }
         </style>
         <div class="wrap">
             <h1><?php esc_html_e('Podlove AssemblyAI', 'podlove-assemblyai'); ?></h1>
 
             <?php settings_errors(self::OPTION_API_KEY); ?>
 
-            <h2><?php esc_html_e('API Key', 'podlove-assemblyai'); ?></h2>
-
-            <form method="post" action="options.php">
-                <?php settings_fields('podlove_assemblyai'); ?>
-                <table class="form-table">
-                    <tr>
-                        <th scope="row">
-                            <label for="podlove_assemblyai_api_key"><?php esc_html_e('API Key', 'podlove-assemblyai'); ?></label>
-                        </th>
-                        <td>
-                            <input type="text" id="podlove_assemblyai_api_key" name="<?php echo esc_attr(self::OPTION_API_KEY); ?>"
-                                   value="<?php echo esc_attr($api_key); ?>" class="regular-text" />
-                            <?php echo $this->render_key_status_indicator($key_status); ?>
-                            <p class="description">
-                                <?php
-                                printf(
-                                    /* translators: %s: link to assemblyai.com */
-                                    esc_html__('Get your API key at %s', 'podlove-assemblyai'),
-                                    '<a href="https://www.assemblyai.com/" target="_blank" rel="noopener">assemblyai.com</a>'
-                                );
-                                ?>
-                            </p>
-                        </td>
-                    </tr>
-                </table>
-                <?php submit_button(__('Save', 'podlove-assemblyai')); ?>
-            </form>
-
             <?php if ($has_key) : ?>
-                <hr />
                 <h2><?php esc_html_e('Batch Transcription', 'podlove-assemblyai'); ?></h2>
                 <p class="description">
                     <?php esc_html_e('Select episodes to transcribe in batch. Episodes are processed one at a time.', 'podlove-assemblyai'); ?>
@@ -257,6 +237,68 @@ class SettingsPage
                 <div id="podlove-assemblyai-batch">
                     <p><em><?php esc_html_e('Loading episodes...', 'podlove-assemblyai'); ?></em></p>
                 </div>
+
+                <hr />
+
+                <details class="podlove-assemblyai-api-key-details"<?php echo ($key_status !== 'valid') ? ' open' : ''; ?>>
+                    <summary>
+                        <?php esc_html_e('API Key', 'podlove-assemblyai'); ?>
+                        <?php echo $this->render_key_status_indicator($key_status); ?>
+                    </summary>
+
+                    <form method="post" action="options.php">
+                        <?php settings_fields('podlove_assemblyai'); ?>
+                        <table class="form-table">
+                            <tr>
+                                <th scope="row">
+                                    <label for="podlove_assemblyai_api_key"><?php esc_html_e('API Key', 'podlove-assemblyai'); ?></label>
+                                </th>
+                                <td>
+                                    <input type="text" id="podlove_assemblyai_api_key" name="<?php echo esc_attr(self::OPTION_API_KEY); ?>"
+                                           value="<?php echo esc_attr($api_key); ?>" class="regular-text" />
+                                    <?php echo $this->render_key_status_indicator($key_status); ?>
+                                    <p class="description">
+                                        <?php
+                                        printf(
+                                            /* translators: %s: link to assemblyai.com */
+                                            esc_html__('Get your API key at %s', 'podlove-assemblyai'),
+                                            '<a href="https://www.assemblyai.com/" target="_blank" rel="noopener">assemblyai.com</a>'
+                                        );
+                                        ?>
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                        <?php submit_button(__('Save', 'podlove-assemblyai')); ?>
+                    </form>
+                </details>
+            <?php else : ?>
+                <h2><?php esc_html_e('API Key', 'podlove-assemblyai'); ?></h2>
+
+                <form method="post" action="options.php">
+                    <?php settings_fields('podlove_assemblyai'); ?>
+                    <table class="form-table">
+                        <tr>
+                            <th scope="row">
+                                <label for="podlove_assemblyai_api_key"><?php esc_html_e('API Key', 'podlove-assemblyai'); ?></label>
+                            </th>
+                            <td>
+                                <input type="text" id="podlove_assemblyai_api_key" name="<?php echo esc_attr(self::OPTION_API_KEY); ?>"
+                                       value="<?php echo esc_attr($api_key); ?>" class="regular-text" />
+                                <p class="description">
+                                    <?php
+                                    printf(
+                                        /* translators: %s: link to assemblyai.com */
+                                        esc_html__('Get your API key at %s', 'podlove-assemblyai'),
+                                        '<a href="https://www.assemblyai.com/" target="_blank" rel="noopener">assemblyai.com</a>'
+                                    );
+                                    ?>
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                    <?php submit_button(__('Save', 'podlove-assemblyai')); ?>
+                </form>
             <?php endif; ?>
         </div>
         <?php

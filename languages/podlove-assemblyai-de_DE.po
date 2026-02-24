@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Podlove AssemblyAI 1.0.7\n"
 "Report-Msgid-Bugs-To: https://github.com/stefanhoth/podlove-assemblyai/"
 "issues\n"
-"POT-Creation-Date: 2026-02-24 15:04+0100\n"
+"POT-Creation-Date: 2026-02-24 15:24+0100\n"
 "PO-Revision-Date: 2026-02-24 15:10+0100\n"
 "Last-Translator: Stefan Hoth <stefan@stefanhoth.com>\n"
 "Language-Team: German <de@li.org>\n"
@@ -17,10 +17,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#: podlove-assemblyai.php:71 inc/SettingsPage.php:24 inc/SettingsPage.php:218
-msgid "Podlove AssemblyAI"
-msgstr "Podlove AssemblyAI"
 
 #: inc/MetaBox.php:22
 msgid "AssemblyAI Transcription"
@@ -86,17 +82,25 @@ msgstr "Warteschlange"
 msgid "processing"
 msgstr "Verarbeitung"
 
+#: inc/SettingsPage.php:24 inc/SettingsPage.php:227 podlove-assemblyai.php:71
+msgid "Podlove AssemblyAI"
+msgstr "Podlove AssemblyAI"
+
 #: inc/SettingsPage.php:25
 msgid "AssemblyAI"
 msgstr "AssemblyAI"
 
 #: inc/SettingsPage.php:61
 msgid "Could not connect to AssemblyAI to verify the key. Key saved anyway."
-msgstr "Verbindung zu AssemblyAI konnte nicht hergestellt werden. Schlüssel wurde trotzdem gespeichert."
+msgstr ""
+"Verbindung zu AssemblyAI konnte nicht hergestellt werden. Schlüssel wurde "
+"trotzdem gespeichert."
 
 #: inc/SettingsPage.php:73
 msgid "AssemblyAI rejected this API key. Please check it and try again."
-msgstr "AssemblyAI hat diesen API-Schlüssel abgelehnt. Bitte überprüfen und erneut versuchen."
+msgstr ""
+"AssemblyAI hat diesen API-Schlüssel abgelehnt. Bitte überprüfen und erneut "
+"versuchen."
 
 #: inc/SettingsPage.php:124
 msgid "API key is valid"
@@ -150,7 +154,7 @@ msgstr "Bereit"
 msgid "No episodes found."
 msgstr "Keine Episoden gefunden."
 
-#: inc/SettingsPage.php:170 inc/SettingsPage.php:258
+#: inc/SettingsPage.php:170 inc/SettingsPage.php:238
 msgid "Loading episodes..."
 msgstr "Episoden werden geladen..."
 
@@ -182,26 +186,27 @@ msgstr "Ja"
 msgid "No"
 msgstr "Nein"
 
-#: inc/SettingsPage.php:222 inc/SettingsPage.php:229
+#: inc/SettingsPage.php:232
+msgid "Batch Transcription"
+msgstr "Stapeltranskription"
+
+#: inc/SettingsPage.php:234
+msgid ""
+"Select episodes to transcribe in batch. Episodes are processed one at a time."
+msgstr ""
+"Episoden für die Stapeltranskription auswählen. Episoden werden einzeln "
+"verarbeitet."
+
+#: inc/SettingsPage.php:245 inc/SettingsPage.php:254 inc/SettingsPage.php:276
+#: inc/SettingsPage.php:283
 msgid "API Key"
 msgstr "API-Schlüssel"
 
-#. translators: %s: link to assemblyai.com
-#: inc/SettingsPage.php:239
+#: inc/SettingsPage.php:264 inc/SettingsPage.php:292
 #, php-format
 msgid "Get your API key at %s"
 msgstr "Deinen API-Schlüssel erhältst du bei %s"
 
-#: inc/SettingsPage.php:247
+#: inc/SettingsPage.php:272 inc/SettingsPage.php:300
 msgid "Save"
 msgstr "Speichern"
-
-#: inc/SettingsPage.php:252
-msgid "Batch Transcription"
-msgstr "Stapeltranskription"
-
-#: inc/SettingsPage.php:254
-msgid ""
-"Select episodes to transcribe in batch. Episodes are processed one at a time."
-msgstr ""
-"Episoden für die Stapeltranskription auswählen. Episoden werden einzeln verarbeitet."
