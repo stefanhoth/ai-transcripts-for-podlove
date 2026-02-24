@@ -1,0 +1,207 @@
+# German translations for Podlove AssemblyAI plugin.
+# Copyright (C) 2026 Stefan Hoth
+# This file is distributed under the same license as the Podlove AssemblyAI package.
+# Stefan Hoth <stefan@stefanhoth.com>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Podlove AssemblyAI 1.0.7\n"
+"Report-Msgid-Bugs-To: https://github.com/stefanhoth/podlove-assemblyai/"
+"issues\n"
+"POT-Creation-Date: 2026-02-24 15:04+0100\n"
+"PO-Revision-Date: 2026-02-24 15:10+0100\n"
+"Last-Translator: Stefan Hoth <stefan@stefanhoth.com>\n"
+"Language-Team: German <de@li.org>\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: podlove-assemblyai.php:71 inc/SettingsPage.php:24 inc/SettingsPage.php:218
+msgid "Podlove AssemblyAI"
+msgstr "Podlove AssemblyAI"
+
+#: inc/MetaBox.php:22
+msgid "AssemblyAI Transcription"
+msgstr "AssemblyAI-Transkription"
+
+#: inc/MetaBox.php:57
+msgid "Start Transcription"
+msgstr "Transkription starten"
+
+#: inc/MetaBox.php:58
+msgid "Submitting to AssemblyAI..."
+msgstr "Wird an AssemblyAI gesendet..."
+
+#: inc/MetaBox.php:59
+msgid "Transcribing..."
+msgstr "Transkribiere..."
+
+#: inc/MetaBox.php:60
+msgid "Importing transcript..."
+msgstr "Transkript wird importiert..."
+
+#: inc/MetaBox.php:61
+msgid "Transcript imported successfully."
+msgstr "Transkript erfolgreich importiert."
+
+#: inc/MetaBox.php:62
+msgid "An error occurred."
+msgstr "Ein Fehler ist aufgetreten."
+
+#: inc/MetaBox.php:63
+msgid "Retry"
+msgstr "Erneut versuchen"
+
+#: inc/MetaBox.php:64
+msgid "Transcribe Again"
+msgstr "Erneut transkribieren"
+
+#: inc/MetaBox.php:65
+msgid "No active audio files available for this episode."
+msgstr "Keine aktiven Audiodateien für diese Episode verfügbar."
+
+#: inc/MetaBox.php:66
+msgid ""
+"This episode already has a transcript. Starting a new transcription will "
+"replace it."
+msgstr ""
+"Diese Episode hat bereits ein Transkript. Eine neue Transkription wird es "
+"ersetzen."
+
+#: inc/MetaBox.php:67
+msgid "Replace Transcript"
+msgstr "Transkript ersetzen"
+
+#: inc/MetaBox.php:68 inc/SettingsPage.php:160 inc/SettingsPage.php:175
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: inc/MetaBox.php:69
+msgid "queued"
+msgstr "Warteschlange"
+
+#: inc/MetaBox.php:70
+msgid "processing"
+msgstr "Verarbeitung"
+
+#: inc/SettingsPage.php:25
+msgid "AssemblyAI"
+msgstr "AssemblyAI"
+
+#: inc/SettingsPage.php:61
+msgid "Could not connect to AssemblyAI to verify the key. Key saved anyway."
+msgstr "Verbindung zu AssemblyAI konnte nicht hergestellt werden. Schlüssel wurde trotzdem gespeichert."
+
+#: inc/SettingsPage.php:73
+msgid "AssemblyAI rejected this API key. Please check it and try again."
+msgstr "AssemblyAI hat diesen API-Schlüssel abgelehnt. Bitte überprüfen und erneut versuchen."
+
+#: inc/SettingsPage.php:124
+msgid "API key is valid"
+msgstr "API-Schlüssel ist gültig"
+
+#: inc/SettingsPage.php:128
+msgid "API key is invalid"
+msgstr "API-Schlüssel ist ungültig"
+
+#: inc/SettingsPage.php:132
+msgid "Could not reach AssemblyAI to verify the key"
+msgstr "AssemblyAI konnte zur Überprüfung des Schlüssels nicht erreicht werden"
+
+#: inc/SettingsPage.php:159
+msgid "Transcribe Selected"
+msgstr "Ausgewählte transkribieren"
+
+#: inc/SettingsPage.php:161
+msgid "Select All"
+msgstr "Alle auswählen"
+
+#: inc/SettingsPage.php:162
+msgid "Select Without Transcript"
+msgstr "Ohne Transkript auswählen"
+
+#: inc/SettingsPage.php:163
+msgid "Deselect All"
+msgstr "Alle abwählen"
+
+#: inc/SettingsPage.php:164
+msgid "Processing..."
+msgstr "Verarbeitung..."
+
+#: inc/SettingsPage.php:165
+msgid "Completed"
+msgstr "Abgeschlossen"
+
+#: inc/SettingsPage.php:166
+msgid "Failed"
+msgstr "Fehlgeschlagen"
+
+#: inc/SettingsPage.php:167
+msgid "Queued"
+msgstr "Warteschlange"
+
+#: inc/SettingsPage.php:168
+msgid "Idle"
+msgstr "Bereit"
+
+#: inc/SettingsPage.php:169
+msgid "No episodes found."
+msgstr "Keine Episoden gefunden."
+
+#: inc/SettingsPage.php:170 inc/SettingsPage.php:258
+msgid "Loading episodes..."
+msgstr "Episoden werden geladen..."
+
+#: inc/SettingsPage.php:171
+msgid "Processing %current% of %total%..."
+msgstr "Verarbeite %current% von %total%..."
+
+#: inc/SettingsPage.php:172
+msgid "Batch transcription complete."
+msgstr "Stapeltranskription abgeschlossen."
+
+#: inc/SettingsPage.php:173
+msgid ""
+"The following episodes already have transcripts that will be replaced: "
+"%episodes%"
+msgstr ""
+"Die folgenden Episoden haben bereits Transkripte, die ersetzt werden: "
+"%episodes%"
+
+#: inc/SettingsPage.php:174
+msgid "Replace and Continue"
+msgstr "Ersetzen und fortfahren"
+
+#: inc/SettingsPage.php:176
+msgid "Yes"
+msgstr "Ja"
+
+#: inc/SettingsPage.php:177
+msgid "No"
+msgstr "Nein"
+
+#: inc/SettingsPage.php:222 inc/SettingsPage.php:229
+msgid "API Key"
+msgstr "API-Schlüssel"
+
+#. translators: %s: link to assemblyai.com
+#: inc/SettingsPage.php:239
+#, php-format
+msgid "Get your API key at %s"
+msgstr "Deinen API-Schlüssel erhältst du bei %s"
+
+#: inc/SettingsPage.php:247
+msgid "Save"
+msgstr "Speichern"
+
+#: inc/SettingsPage.php:252
+msgid "Batch Transcription"
+msgstr "Stapeltranskription"
+
+#: inc/SettingsPage.php:254
+msgid ""
+"Select episodes to transcribe in batch. Episodes are processed one at a time."
+msgstr ""
+"Episoden für die Stapeltranskription auswählen. Episoden werden einzeln verarbeitet."

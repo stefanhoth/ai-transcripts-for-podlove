@@ -1,0 +1,202 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the Podlove AssemblyAI package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Podlove AssemblyAI 1.0.7\n"
+"Report-Msgid-Bugs-To: https://github.com/stefanhoth/podlove-assemblyai/"
+"issues\n"
+"POT-Creation-Date: 2026-02-24 15:04+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: podlove-assemblyai.php:71 inc/SettingsPage.php:24 inc/SettingsPage.php:218
+msgid "Podlove AssemblyAI"
+msgstr ""
+
+#: inc/MetaBox.php:22
+msgid "AssemblyAI Transcription"
+msgstr ""
+
+#: inc/MetaBox.php:57
+msgid "Start Transcription"
+msgstr ""
+
+#: inc/MetaBox.php:58
+msgid "Submitting to AssemblyAI..."
+msgstr ""
+
+#: inc/MetaBox.php:59
+msgid "Transcribing..."
+msgstr ""
+
+#: inc/MetaBox.php:60
+msgid "Importing transcript..."
+msgstr ""
+
+#: inc/MetaBox.php:61
+msgid "Transcript imported successfully."
+msgstr ""
+
+#: inc/MetaBox.php:62
+msgid "An error occurred."
+msgstr ""
+
+#: inc/MetaBox.php:63
+msgid "Retry"
+msgstr ""
+
+#: inc/MetaBox.php:64
+msgid "Transcribe Again"
+msgstr ""
+
+#: inc/MetaBox.php:65
+msgid "No active audio files available for this episode."
+msgstr ""
+
+#: inc/MetaBox.php:66
+msgid ""
+"This episode already has a transcript. Starting a new transcription will "
+"replace it."
+msgstr ""
+
+#: inc/MetaBox.php:67
+msgid "Replace Transcript"
+msgstr ""
+
+#: inc/MetaBox.php:68 inc/SettingsPage.php:160 inc/SettingsPage.php:175
+msgid "Cancel"
+msgstr ""
+
+#: inc/MetaBox.php:69
+msgid "queued"
+msgstr ""
+
+#: inc/MetaBox.php:70
+msgid "processing"
+msgstr ""
+
+#: inc/SettingsPage.php:25
+msgid "AssemblyAI"
+msgstr ""
+
+#: inc/SettingsPage.php:61
+msgid "Could not connect to AssemblyAI to verify the key. Key saved anyway."
+msgstr ""
+
+#: inc/SettingsPage.php:73
+msgid "AssemblyAI rejected this API key. Please check it and try again."
+msgstr ""
+
+#: inc/SettingsPage.php:124
+msgid "API key is valid"
+msgstr ""
+
+#: inc/SettingsPage.php:128
+msgid "API key is invalid"
+msgstr ""
+
+#: inc/SettingsPage.php:132
+msgid "Could not reach AssemblyAI to verify the key"
+msgstr ""
+
+#: inc/SettingsPage.php:159
+msgid "Transcribe Selected"
+msgstr ""
+
+#: inc/SettingsPage.php:161
+msgid "Select All"
+msgstr ""
+
+#: inc/SettingsPage.php:162
+msgid "Select Without Transcript"
+msgstr ""
+
+#: inc/SettingsPage.php:163
+msgid "Deselect All"
+msgstr ""
+
+#: inc/SettingsPage.php:164
+msgid "Processing..."
+msgstr ""
+
+#: inc/SettingsPage.php:165
+msgid "Completed"
+msgstr ""
+
+#: inc/SettingsPage.php:166
+msgid "Failed"
+msgstr ""
+
+#: inc/SettingsPage.php:167
+msgid "Queued"
+msgstr ""
+
+#: inc/SettingsPage.php:168
+msgid "Idle"
+msgstr ""
+
+#: inc/SettingsPage.php:169
+msgid "No episodes found."
+msgstr ""
+
+#: inc/SettingsPage.php:170 inc/SettingsPage.php:258
+msgid "Loading episodes..."
+msgstr ""
+
+#: inc/SettingsPage.php:171
+msgid "Processing %current% of %total%..."
+msgstr ""
+
+#: inc/SettingsPage.php:172
+msgid "Batch transcription complete."
+msgstr ""
+
+#: inc/SettingsPage.php:173
+msgid ""
+"The following episodes already have transcripts that will be replaced: "
+"%episodes%"
+msgstr ""
+
+#: inc/SettingsPage.php:174
+msgid "Replace and Continue"
+msgstr ""
+
+#: inc/SettingsPage.php:176
+msgid "Yes"
+msgstr ""
+
+#: inc/SettingsPage.php:177
+msgid "No"
+msgstr ""
+
+#: inc/SettingsPage.php:222 inc/SettingsPage.php:229
+msgid "API Key"
+msgstr ""
+
+#. translators: %s: link to assemblyai.com
+#: inc/SettingsPage.php:239
+#, php-format
+msgid "Get your API key at %s"
+msgstr ""
+
+#: inc/SettingsPage.php:247
+msgid "Save"
+msgstr ""
+
+#: inc/SettingsPage.php:252
+msgid "Batch Transcription"
+msgstr ""
+
+#: inc/SettingsPage.php:254
+msgid ""
+"Select episodes to transcribe in batch. Episodes are processed one at a time."
+msgstr ""
