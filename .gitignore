@@ -2,3 +2,5 @@
 /node_modules/
 .phpunit.result.cache
 .claude/
+.DS_Store
+/mp3/
