@@ -15,12 +15,24 @@
                 : 'idle',
         error: null,
         assemblyaiStatus: config.initialStatus || null,
+        hasTranscript: config.initialStatus === 'imported' || config.initialStatus === 'completed',
         pollCount: 0,
         pollTimer: null,
     };
 
     var container = document.getElementById('podlove-assemblyai-metabox');
     if (!container) return;
+
+    // After a post-import reload, scroll back to this meta box.
+    // Use a delay so the Gutenberg editor has time to finish rendering.
+    try {
+        if (sessionStorage.getItem('podlove-assemblyai-scroll')) {
+            sessionStorage.removeItem('podlove-assemblyai-scroll');
+            setTimeout(function () {
+                container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 1500);
+        }
+    } catch (e) {}
 
     function apiFetch(path, options) {
         var url = config.restBase + path;
@@ -45,6 +57,9 @@
             case 'idle':
                 html = renderIdle();
                 break;
+            case 'confirm':
+                html = renderConfirm();
+                break;
             case 'submitting':
                 html = renderSpinner(config.i18n.submitting);
                 break;
@@ -61,13 +76,13 @@
                 break;
             case 'imported':
                 html = '<p class="podlove-assemblyai-success">' + escHtml(config.i18n.imported) + '</p>'
-                    + '<button type="button" class="button" data-action="reset">'
+                    + '<button type="button" class="button" data-action="transcribe-again">'
                     + escHtml(config.i18n.transcribeAgain) + '</button>';
                 break;
             case 'error':
                 html = '<p class="podlove-assemblyai-error">'
                     + escHtml(state.error || config.i18n.error) + '</p>'
-                    + '<button type="button" class="button" data-action="reset">'
+                    + '<button type="button" class="button" data-action="transcribe">'
                     + escHtml(config.i18n.retry) + '</button>';
                 break;
         }
@@ -79,6 +94,17 @@
     function renderIdle() {
         return '<button type="button" class="button button-primary" data-action="transcribe">'
             + escHtml(config.i18n.startTranscription) + '</button>';
+    }
+
+    function renderConfirm() {
+        return '<div class="podlove-assemblyai-confirm">'
+            + '<p>' + escHtml(config.i18n.confirmReplace) + '</p>'
+            + '<div class="podlove-assemblyai-confirm-actions">'
+            + '<button type="button" class="button button-primary" data-action="confirm-yes">'
+            + escHtml(config.i18n.confirmYes) + '</button>'
+            + '<button type="button" class="button" data-action="confirm-no">'
+            + escHtml(config.i18n.confirmNo) + '</button>'
+            + '</div></div>';
     }
 
     function renderSpinner(label) {
@@ -95,33 +121,45 @@
     }
 
     function bindEvents() {
-        var transcribeBtn = container.querySelector('[data-action="transcribe"]');
-        if (transcribeBtn) {
-            transcribeBtn.addEventListener('click', onTranscribe);
-        }
-
-        var resetBtn = container.querySelector('[data-action="reset"]');
-        if (resetBtn) {
-            resetBtn.addEventListener('click', onReset);
-        }
+        container.querySelectorAll('[data-action]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var action = btn.getAttribute('data-action');
+                switch (action) {
+                    case 'transcribe':
+                        onTranscribe();
+                        break;
+                    case 'transcribe-again':
+                        onTranscribeAgain();
+                        break;
+                    case 'confirm-yes':
+                        startTranscription();
+                        break;
+                    case 'confirm-no':
+                        state.status = 'imported';
+                        render();
+                        break;
+                }
+            });
+        });
     }
 
     function onTranscribe() {
-        // Check for existing transcript via config endpoint
-        apiFetch('/config').then(function (res) {
-            if (!res.ok) {
-                setError(res.data.error || config.i18n.error);
-                return;
-            }
+        startTranscription();
+    }
 
-            // Check if episode already has a transcript by looking at post meta
-            if (config.initialStatus === 'imported') {
-                if (!window.confirm(config.i18n.confirmReplace)) {
-                    return;
-                }
+    function onTranscribeAgain() {
+        // Check live transcript status before deciding to confirm
+        apiFetch('/config?post_id=' + config.postId).then(function (res) {
+            if (res.ok && res.data.has_transcript) {
+                state.status = 'confirm';
+                render();
+            } else {
+                startTranscription();
             }
-
-            startTranscription();
+        }).catch(function () {
+            // On error, be safe and show confirmation
+            state.status = 'confirm';
+            render();
         });
     }
 
@@ -197,9 +235,12 @@
                 return;
             }
 
-            state.status = 'imported';
-            config.initialStatus = 'imported';
-            render();
+            state.hasTranscript = true;
+
+            // Reload the page so the Podlove Transcripts section also updates.
+            // Save scroll target so we can scroll back after reload.
+            try { sessionStorage.setItem('podlove-assemblyai-scroll', '1'); } catch (e) {}
+            window.location.reload();
         }).catch(function () {
             setError(config.i18n.error);
         });
@@ -209,13 +250,6 @@
         state.status = 'error';
         state.error = msg;
         stopPolling();
-        render();
-    }
-
-    function onReset() {
-        state.status = 'idle';
-        state.error = null;
-        state.assemblyaiStatus = null;
         render();
     }
 

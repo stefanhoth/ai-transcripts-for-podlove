@@ -9,7 +9,7 @@ class SettingsPage
 
     public function __construct()
     {
-        add_action('admin_menu', [$this, 'add_menu_page']);
+        add_action('admin_menu', [$this, 'add_menu_page'], 50);
         add_action('admin_init', [$this, 'register_settings']);
     }
 
@@ -17,7 +17,7 @@ class SettingsPage
     {
         // Add as submenu under Podlove if available, otherwise under Settings
         global $admin_page_hooks;
-        $parent = isset($admin_page_hooks['podlove']) ? 'podlove' : 'options-general.php';
+        $parent = isset($admin_page_hooks['podlove_settings_handle']) ? 'podlove_settings_handle' : 'options-general.php';
 
         add_submenu_page(
             $parent,
@@ -80,10 +80,67 @@ class SettingsPage
     }
 
 
+    /**
+     * Check current API key validity against AssemblyAI.
+     *
+     * @return string 'valid', 'invalid', 'error', or 'empty'
+     */
+    private function check_api_key_status($api_key)
+    {
+        if (empty($api_key)) {
+            return 'empty';
+        }
+
+        $response = wp_remote_get('https://api.assemblyai.com/v2/transcript?limit=1', [
+            'headers' => ['Authorization' => $api_key],
+            'timeout' => 10,
+        ]);
+
+        if (is_wp_error($response)) {
+            return 'error';
+        }
+
+        $code = wp_remote_retrieve_response_code($response);
+
+        if ($code === 401) {
+            return 'invalid';
+        }
+
+        if ($code >= 200 && $code < 300) {
+            return 'valid';
+        }
+
+        return 'error';
+    }
+
+    /**
+     * Render an inline status indicator for the API key.
+     */
+    private function render_key_status_indicator($status)
+    {
+        switch ($status) {
+            case 'valid':
+                return '<span class="podlove-assemblyai-key-status podlove-assemblyai-key-valid" title="'
+                    . esc_attr__('API key is valid', 'podlove-assemblyai')
+                    . '">&#10003;</span>';
+            case 'invalid':
+                return '<span class="podlove-assemblyai-key-status podlove-assemblyai-key-invalid" title="'
+                    . esc_attr__('API key is invalid', 'podlove-assemblyai')
+                    . '">&#10007;</span>';
+            case 'error':
+                return '<span class="podlove-assemblyai-key-status podlove-assemblyai-key-error" title="'
+                    . esc_attr__('Could not reach AssemblyAI to verify the key', 'podlove-assemblyai')
+                    . '">?</span>';
+            default:
+                return '';
+        }
+    }
+
     public function render_page()
     {
         $api_key = get_option(self::OPTION_API_KEY, '');
         $has_key = !empty($api_key);
+        $key_status = $this->check_api_key_status($api_key);
 
         if ($has_key) {
             wp_enqueue_script(
@@ -97,6 +154,7 @@ class SettingsPage
             wp_localize_script('podlove-assemblyai-settings', 'podloveAssemblyAISettings', [
                 'restBase' => rest_url('podlove-assemblyai/v1'),
                 'nonce' => wp_create_nonce('wp_rest'),
+                'adminUrl' => admin_url(),
                 'i18n' => [
                     'transcribe' => __('Transcribe Selected', 'podlove-assemblyai'),
                     'cancel' => __('Cancel', 'podlove-assemblyai'),
@@ -112,6 +170,9 @@ class SettingsPage
                     'loading' => __('Loading episodes...', 'podlove-assemblyai'),
                     'batchProgress' => __('Processing %current% of %total%...', 'podlove-assemblyai'),
                     'batchDone' => __('Batch transcription complete.', 'podlove-assemblyai'),
+                    'batchConfirmReplace' => __('The following episodes already have transcripts that will be replaced: %episodes%', 'podlove-assemblyai'),
+                    'batchConfirmYes' => __('Replace and Continue', 'podlove-assemblyai'),
+                    'batchConfirmNo' => __('Cancel', 'podlove-assemblyai'),
                     'yes' => __('Yes', 'podlove-assemblyai'),
                     'no' => __('No', 'podlove-assemblyai'),
                 ],
@@ -119,6 +180,40 @@ class SettingsPage
         }
 
         ?>
+        <style>
+            .podlove-assemblyai-key-status {
+                display: inline-block;
+                width: 24px;
+                height: 24px;
+                line-height: 24px;
+                text-align: center;
+                border-radius: 50%;
+                font-size: 14px;
+                font-weight: bold;
+                vertical-align: middle;
+                margin-left: 8px;
+            }
+            .podlove-assemblyai-key-valid {
+                background: #00a32a;
+                color: #fff;
+            }
+            .podlove-assemblyai-key-invalid {
+                background: #d63638;
+                color: #fff;
+            }
+            .podlove-assemblyai-key-error {
+                background: #dba617;
+                color: #fff;
+            }
+            .podlove-assemblyai-confirm {
+                background: #fff8e5;
+                border-left: 4px solid #dba617;
+                padding: 12px 16px;
+            }
+            .podlove-assemblyai-confirm p {
+                margin: 0 0 12px;
+            }
+        </style>
         <div class="wrap">
             <h1><?php esc_html_e('Podlove AssemblyAI', 'podlove-assemblyai'); ?></h1>
 
@@ -136,6 +231,7 @@ class SettingsPage
                         <td>
                             <input type="text" id="podlove_assemblyai_api_key" name="<?php echo esc_attr(self::OPTION_API_KEY); ?>"
                                    value="<?php echo esc_attr($api_key); ?>" class="regular-text" />
+                            <?php echo $this->render_key_status_indicator($key_status); ?>
                             <p class="description">
                                 <?php
                                 printf(

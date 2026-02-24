@@ -79,7 +79,8 @@
             var disabled = !ep.has_audio ? ' disabled' : '';
             html += '<tr data-post-id="' + ep.post_id + '">';
             html += '<th class="check-column"><input type="checkbox" value="' + ep.post_id + '"' + disabled + ' /></th>';
-            html += '<td>' + escHtml(ep.title) + '</td>';
+            var editUrl = config.adminUrl + 'post.php?post=' + ep.post_id + '&action=edit';
+            html += '<td><a href="' + editUrl + '">' + escHtml(ep.title) + '</a></td>';
             html += '<td>' + (ep.has_audio ? escHtml(config.i18n.yes) : escHtml(config.i18n.no)) + '</td>';
             html += '<td>' + (ep.has_transcript ? escHtml(config.i18n.yes) : escHtml(config.i18n.no)) + '</td>';
             html += '<td class="batch-status">' + renderStatus(ep.assemblyai_status) + '</td>';
@@ -155,11 +156,75 @@
         var postIds = getSelectedPostIds();
         if (postIds.length === 0) return;
 
+        // Check if any selected episodes already have transcripts
+        var withTranscripts = episodes.filter(function (ep) {
+            return postIds.indexOf(ep.post_id) !== -1 && ep.has_transcript;
+        });
+
+        if (withTranscripts.length > 0) {
+            showBatchConfirm(postIds, withTranscripts);
+            return;
+        }
+
+        runBatch(postIds);
+    }
+
+    function showBatchConfirm(postIds, withTranscripts) {
+        var names = withTranscripts.map(function (ep) { return ep.title; }).join(', ');
+        var confirmHtml = '<div class="podlove-assemblyai-confirm" style="margin-top:12px;">'
+            + '<p>' + escHtml(config.i18n.batchConfirmReplace.replace('%episodes%', names)) + '</p>'
+            + '<div style="display:flex;gap:8px;">'
+            + '<button type="button" class="button button-primary" data-action="batch-confirm-yes">'
+            + escHtml(config.i18n.batchConfirmYes) + '</button>'
+            + '<button type="button" class="button" data-action="batch-confirm-no">'
+            + escHtml(config.i18n.batchConfirmNo) + '</button>'
+            + '</div></div>';
+
+        // Insert confirmation after the table actions
+        var actionsDiv = batchContainer.querySelector('.podlove-assemblyai-confirm');
+        if (actionsDiv) actionsDiv.remove();
+
+        batchContainer.insertAdjacentHTML('beforeend', confirmHtml);
+
+        var yesBtn = batchContainer.querySelector('[data-action="batch-confirm-yes"]');
+        var noBtn = batchContainer.querySelector('[data-action="batch-confirm-no"]');
+        if (yesBtn) yesBtn.addEventListener('click', function () { runBatch(postIds); });
+        if (noBtn) noBtn.addEventListener('click', function () {
+            var el = batchContainer.querySelector('.podlove-assemblyai-confirm');
+            if (el) el.remove();
+        });
+    }
+
+    function runBatch(postIds) {
         batchRunning = true;
         batchCancelled = false;
         batchCurrent = 0;
         batchTotal = postIds.length;
-        renderEpisodeList();
+
+        // Mark all selected as queued immediately
+        for (var i = 0; i < postIds.length; i++) {
+            updateRowStatus(postIds[i], config.i18n.queued);
+        }
+
+        // Remove any lingering confirmation
+        var confirmEl = batchContainer.querySelector('.podlove-assemblyai-confirm');
+        if (confirmEl) confirmEl.remove();
+
+        // Update toolbar (disable transcribe button, show cancel)
+        var batchBtn = batchContainer.querySelector('[data-action="batch-transcribe"]');
+        if (batchBtn) batchBtn.disabled = true;
+
+        var actionsDiv = batchBtn ? batchBtn.parentNode : null;
+        if (actionsDiv && !batchContainer.querySelector('[data-action="batch-cancel"]')) {
+            var cancelBtn = document.createElement('button');
+            cancelBtn.type = 'button';
+            cancelBtn.className = 'button';
+            cancelBtn.setAttribute('data-action', 'batch-cancel');
+            cancelBtn.textContent = config.i18n.cancel;
+            cancelBtn.addEventListener('click', cancelBatch);
+            actionsDiv.insertBefore(cancelBtn, batchBtn.nextSibling);
+            actionsDiv.insertBefore(document.createTextNode(' '), cancelBtn);
+        }
 
         processNext(postIds, 0);
     }

@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('PODLOVE_ASSEMBLYAI_VERSION', '1.0.0');
+define('PODLOVE_ASSEMBLYAI_VERSION', '1.0.7');
 define('PODLOVE_ASSEMBLYAI_FILE', __FILE__);
 define('PODLOVE_ASSEMBLYAI_DIR', plugin_dir_path(__FILE__));
 define('PODLOVE_ASSEMBLYAI_URL', plugin_dir_url(__FILE__));

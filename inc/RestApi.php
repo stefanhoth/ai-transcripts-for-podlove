@@ -103,13 +103,25 @@ class RestApi
         return true;
     }
 
-    public function get_config()
+    public function get_config(\WP_REST_Request $request)
     {
         $api_key = get_option('podlove_assemblyai_api_key', '');
 
-        return new \WP_REST_Response([
+        $result = [
             'has_api_key' => !empty($api_key),
-        ]);
+        ];
+
+        // Optionally check transcript existence for a specific post
+        $post_id = $request->get_param('post_id');
+        if ($post_id) {
+            $post_id = absint($post_id);
+            $episode = Episode::find_or_create_by_post_id($post_id);
+            $result['has_transcript'] = $episode
+                ? (bool) \Podlove\Modules\Transcripts\Model\Transcript::exists_for_episode($episode->id)
+                : false;
+        }
+
+        return new \WP_REST_Response($result);
     }
 
     public function get_episodes()

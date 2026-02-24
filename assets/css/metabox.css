@@ -23,3 +23,19 @@
     color: #646970;
     font-style: italic;
 }
+
+.podlove-assemblyai-confirm {
+    background: #fff8e5;
+    border-left: 4px solid #dba617;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+}
+
+.podlove-assemblyai-confirm p {
+    margin: 0 0 12px;
+}
+
+.podlove-assemblyai-confirm-actions {
+    display: flex;
+    gap: 8px;
+}
