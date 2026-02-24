@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Podlove AssemblyAI 1.0.7\n"
 "Report-Msgid-Bugs-To: https://github.com/stefanhoth/podlove-assemblyai/"
 "issues\n"
-"POT-Creation-Date: 2026-02-24 15:24+0100\n"
+"POT-Creation-Date: 2026-02-24 15:29+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -85,7 +85,7 @@ msgid "Podlove AssemblyAI"
 msgstr ""
 
 #: inc/SettingsPage.php:25
-msgid "AssemblyAI"
+msgid "AI Transcription"
 msgstr ""
 
 #: inc/SettingsPage.php:61

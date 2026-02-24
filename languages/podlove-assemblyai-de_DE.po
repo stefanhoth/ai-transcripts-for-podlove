@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Podlove AssemblyAI 1.0.7\n"
 "Report-Msgid-Bugs-To: https://github.com/stefanhoth/podlove-assemblyai/"
 "issues\n"
-"POT-Creation-Date: 2026-02-24 15:24+0100\n"
+"POT-Creation-Date: 2026-02-24 15:29+0100\n"
 "PO-Revision-Date: 2026-02-24 15:10+0100\n"
 "Last-Translator: Stefan Hoth <stefan@stefanhoth.com>\n"
 "Language-Team: German <de@li.org>\n"
@@ -87,8 +87,8 @@ msgid "Podlove AssemblyAI"
 msgstr "Podlove AssemblyAI"
 
 #: inc/SettingsPage.php:25
-msgid "AssemblyAI"
-msgstr "AssemblyAI"
+msgid "AI Transcription"
+msgstr "KI-Transkription"
 
 #: inc/SettingsPage.php:61
 msgid "Could not connect to AssemblyAI to verify the key. Key saved anyway."
@@ -210,3 +210,6 @@ msgstr "Deinen API-Schlüssel erhältst du bei %s"
 #: inc/SettingsPage.php:272 inc/SettingsPage.php:300
 msgid "Save"
 msgstr "Speichern"
+
+#~ msgid "AssemblyAI"
+#~ msgstr "AssemblyAI"

@@ -22,7 +22,7 @@ class SettingsPage
         add_submenu_page(
             $parent,
             __('Podlove AssemblyAI', 'podlove-assemblyai'),
-            __('AssemblyAI', 'podlove-assemblyai'),
+            __('AI Transcription', 'podlove-assemblyai'),
             'edit_posts',
             self::MENU_SLUG,
             [$this, 'render_page']
