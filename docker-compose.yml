@@ -32,6 +32,7 @@ services:
       WORDPRESS_DB_PASSWORD: wordpress
       WORDPRESS_DB_NAME: wordpress
       WORDPRESS_DEBUG: "1"
+      WORDPRESS_LOCALE: de_DE
     volumes:
       - wp-data:/var/www/html
       # Mount this plugin (live-reloads on file changes)

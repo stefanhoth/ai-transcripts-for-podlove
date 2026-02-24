@@ -20,8 +20,13 @@ if ! $WP core is-installed 2>/dev/null; then
         --admin_user=admin \
         --admin_password=admin \
         --admin_email=admin@example.com \
+        --locale=de_DE \
         --skip-email
 fi
+
+# Ensure German locale is active
+echo "Setting up German locale..."
+$WP language core install de_DE --activate
 
 # Install and activate Podlove Publisher from WordPress.org
 echo "Installing Podlove Publisher from WordPress.org..."
