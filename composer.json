@@ -1,6 +1,6 @@
 {
-    "name": "stefanhoth/podlove-assemblyai",
-    "description": "AssemblyAI transcription for Podlove Publisher",
+    "name": "stefanhoth/ai-transcripts-for-podlove",
+    "description": "AI-powered transcription for Podlove Publisher",
     "type": "wordpress-plugin",
     "license": "MIT",
     "require": {
@@ -11,7 +11,7 @@
     },
     "autoload": {
         "psr-4": {
-            "PodloveAssemblyAI\\": "inc/"
+            "AiTranscriptsForPodlove\\": "inc/"
         }
     }
 }

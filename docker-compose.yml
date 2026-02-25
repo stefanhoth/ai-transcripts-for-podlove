@@ -1,7 +1,7 @@
 services:
   db:
     image: mysql:latest
-    container_name: podlove-assemblyai-db
+    container_name: ai-transcripts-for-podlove-db
     restart: unless-stopped
     environment:
       MYSQL_DATABASE: wordpress
@@ -19,7 +19,7 @@ services:
 
   wordpress:
     build: .
-    container_name: podlove-assemblyai-wp
+    container_name: ai-transcripts-for-podlove-wp
     ports:
       - "8080:80"
     restart: unless-stopped
@@ -36,7 +36,7 @@ services:
     volumes:
       - wp-data:/var/www/html
       # Mount this plugin (live-reloads on file changes)
-      - .:/var/www/html/wp-content/plugins/podlove-assemblyai
+      - .:/var/www/html/wp-content/plugins/ai-transcripts-for-podlove
     networks:
       - app-network
 
