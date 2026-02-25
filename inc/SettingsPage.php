@@ -175,6 +175,7 @@ class SettingsPage
                     'batchConfirmNo' => __('Cancel', 'ai-transcripts-for-podlove'),
                     'yes' => __('Yes', 'ai-transcripts-for-podlove'),
                     'no' => __('No', 'ai-transcripts-for-podlove'),
+                    'urlNotPublic' => __('URL not public', 'ai-transcripts-for-podlove'),
                 ],
             ]);
         }

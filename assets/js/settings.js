@@ -7,7 +7,7 @@
     var POLL_INTERVAL = 5000;
     var MAX_POLLS = 360;
 
-    var batchContainer = document.getElementById('ai-transcripts-batch');
+    var batchContainer = document.getElementById('ai-transcripts-for-podlove-batch');
     if (!batchContainer) return;
 
     var episodes = [];
@@ -76,13 +76,13 @@
 
         for (var i = 0; i < episodes.length; i++) {
             var ep = episodes[i];
-            var disabled = !ep.has_audio ? ' disabled' : '';
+            var disabled = !ep.has_audio || ep.url_error ? ' disabled' : '';
             html += '<tr data-post-id="' + ep.post_id + '">';
             html += '<th class="check-column"><input type="checkbox" value="' + ep.post_id + '"' + disabled + ' /></th>';
             var editUrl = config.adminUrl + 'post.php?post=' + ep.post_id + '&action=edit';
             html += '<td><a href="' + editUrl + '">' + escHtml(ep.title) + '</a></td>';
-            html += '<td>' + (ep.has_audio ? escHtml(config.i18n.yes) : escHtml(config.i18n.no)) + '</td>';
-            html += '<td>' + (ep.has_transcript ? escHtml(config.i18n.yes) : escHtml(config.i18n.no)) + '</td>';
+            html += '<td>' + renderAudioStatus(ep) + '</td>';
+            html += '<td>' + (ep.has_transcript ? '\u2705' : '\u2014') + '</td>';
             html += '<td class="batch-status">' + renderStatus(ep.assemblyai_status) + '</td>';
             html += '</tr>';
         }
@@ -90,7 +90,7 @@
         html += '</tbody></table>';
 
         html += '<div style="margin-top:12px;">';
-        html += '<button type="button" class="button button-primary" data-action="batch-transcribe"' + (batchRunning ? ' disabled' : '') + '>'
+        html += '<button type="button" class="button button-primary" data-action="batch-transcribe" disabled>'
             + escHtml(config.i18n.transcribe) + '</button> ';
         if (batchRunning) {
             html += '<button type="button" class="button" data-action="batch-cancel">' + escHtml(config.i18n.cancel) + '</button> ';
@@ -100,6 +100,12 @@
 
         batchContainer.innerHTML = html;
         bindBatchEvents();
+    }
+
+    function renderAudioStatus(ep) {
+        if (!ep.has_audio) return '\u274C';
+        if (ep.url_error) return '\u26A0\uFE0F <span style="color:#dba617;" title="' + escHtml(ep.url_error) + '">' + escHtml(config.i18n.urlNotPublic) + '</span>';
+        return '\u2705';
     }
 
     function renderStatus(status) {
@@ -125,6 +131,11 @@
         if (toggleAll) toggleAll.addEventListener('change', function () { setAllCheckboxes(this.checked); });
         if (batchBtn) batchBtn.addEventListener('click', startBatch);
         if (cancelBtn) cancelBtn.addEventListener('click', cancelBatch);
+
+        var boxes = batchContainer.querySelectorAll('tbody input[type="checkbox"]');
+        for (var i = 0; i < boxes.length; i++) {
+            boxes[i].addEventListener('change', updateBatchButton);
+        }
     }
 
     function setAllCheckboxes(checked) {
@@ -132,6 +143,7 @@
         for (var i = 0; i < boxes.length; i++) {
             boxes[i].checked = checked;
         }
+        updateBatchButton();
     }
 
     function selectWithoutTranscript() {
@@ -139,8 +151,9 @@
         for (var i = 0; i < boxes.length; i++) {
             var postId = parseInt(boxes[i].value, 10);
             var ep = episodes.find(function (e) { return e.post_id === postId; });
-            boxes[i].checked = ep && !ep.has_transcript && ep.has_audio;
+            boxes[i].checked = ep && !ep.has_transcript && ep.has_audio && !ep.url_error;
         }
+        updateBatchButton();
     }
 
     function getSelectedPostIds() {
@@ -150,6 +163,11 @@
             ids.push(parseInt(boxes[i].value, 10));
         }
         return ids;
+    }
+
+    function updateBatchButton() {
+        var btn = batchContainer.querySelector('[data-action="batch-transcribe"]');
+        if (btn) btn.disabled = batchRunning || getSelectedPostIds().length === 0;
     }
 
     function startBatch() {

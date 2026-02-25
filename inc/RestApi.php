@@ -144,9 +144,16 @@ class RestApi
             $has_transcript = false;
             $assemblyai_status = get_post_meta($post->ID, 'assemblyai_status', true);
 
+            $url_error = null;
+
             if ($episode) {
-                $has_audio = $this->episode_has_audio($episode);
+                $audio_url = $this->get_audio_url($episode);
+                $has_audio = $audio_url !== null;
                 $has_transcript = \Podlove\Modules\Transcripts\Model\Transcript::exists_for_episode($episode->id);
+
+                if ($has_audio) {
+                    $url_error = $this->validate_public_url($audio_url);
+                }
             }
 
             $episodes[] = [
@@ -155,6 +162,7 @@ class RestApi
                 'has_audio' => $has_audio,
                 'has_transcript' => (bool) $has_transcript,
                 'assemblyai_status' => $assemblyai_status ?: null,
+                'url_error' => $url_error,
             ];
         }
 
@@ -403,18 +411,6 @@ class RestApi
         }
 
         return null;
-    }
-
-    /**
-     * Check whether an episode has any active audio media files.
-     *
-     * @param mixed $episode
-     *
-     * @return bool
-     */
-    private function episode_has_audio($episode)
-    {
-        return $this->get_audio_url($episode) !== null;
     }
 
     /**
