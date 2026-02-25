@@ -41,8 +41,8 @@ update_option('podlove_active_modules', \$modules);
 "
 
 # Activate our plugin
-echo "Activating Podlove AssemblyAI..."
-$WP plugin activate podlove-assemblyai
+echo "Activating AI Transcripts for Podlove..."
+$WP plugin activate ai-transcripts-for-podlove
 
 # List active plugins
 echo ""

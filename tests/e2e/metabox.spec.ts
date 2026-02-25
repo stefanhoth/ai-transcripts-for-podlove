@@ -2,11 +2,11 @@
  * E2E tests for the Episode Meta Box (metabox.js).
  *
  * These tests load a standalone HTML fixture page that provides the expected
- * DOM structure and window.podloveAssemblyAI config object. All REST API
+ * DOM structure and window.aiTranscripts config object. All REST API
  * calls are intercepted with page.route() — no running WordPress instance
  * is required.
  *
- * REST base intercepted: http://localhost:8080/wp-json/podlove-assemblyai/v1/*
+ * REST base intercepted: http://localhost:8080/wp-json/ai-transcripts-for-podlove/v1/*
  */
 
 import { test, expect, Page } from '@playwright/test';
@@ -16,13 +16,13 @@ import * as path from 'path';
 const FIXTURE_URL = 'file://' + path.resolve(__dirname, 'fixtures/metabox.html');
 
 // REST API base used inside the fixture config (must match route pattern below).
-const REST_BASE = 'http://localhost:8080/wp-json/podlove-assemblyai/v1';
+const REST_BASE = 'http://localhost:8080/wp-json/ai-transcripts-for-podlove/v1';
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
-/** Intercept all podlove-assemblyai REST calls and return mocked responses. */
+/** Intercept all ai-transcripts-for-podlove REST calls and return mocked responses. */
 type RouteMap = {
   [pattern: string]: { status: number; body: object };
 };
@@ -53,7 +53,7 @@ async function loadMetabox(
   await page.evaluate((o) => (window as any).__initMetabox(o), overrides);
   // Wait for the container to have rendered content.
   await page.waitForFunction(() => {
-    const c = document.getElementById('podlove-assemblyai-metabox');
+    const c = document.getElementById('ai-transcripts-for-podlove-metabox');
     return c !== null && c.innerHTML.trim() !== '';
   });
 }
@@ -67,12 +67,12 @@ test.describe('Episode Meta Box', () => {
     await loadMetabox(
       page,
       {
-        '**/podlove-assemblyai/v1/config': { status: 200, body: { has_api_key: true } },
+        '**/ai-transcripts-for-podlove/v1/config': { status: 200, body: { has_api_key: true } },
       },
       { initialStatus: null }
     );
 
-    const btn = page.locator('#podlove-assemblyai-metabox [data-action="transcribe"]');
+    const btn = page.locator('#ai-transcripts-for-podlove-metabox [data-action="transcribe"]');
     await expect(btn).toBeVisible();
     await expect(btn).toHaveText('Start Transcription');
   });
@@ -80,7 +80,7 @@ test.describe('Episode Meta Box', () => {
   test('meta box resumes polling when initial status is processing', async ({ page }) => {
     // Route the status endpoint so polling does not fail silently.
     await mockRoutes(page, {
-      '**/podlove-assemblyai/v1/status/42': {
+      '**/ai-transcripts-for-podlove/v1/status/42': {
         status: 200,
         body: { status: 'processing' },
       },
@@ -89,10 +89,10 @@ test.describe('Episode Meta Box', () => {
     await page.evaluate((o) => (window as any).__initMetabox(o), { initialStatus: 'processing' });
 
     // A spinner should be shown immediately (processing state).
-    const spinner = page.locator('#podlove-assemblyai-metabox .spinner.is-active');
+    const spinner = page.locator('#ai-transcripts-for-podlove-metabox .spinner.is-active');
     await expect(spinner).toBeVisible();
 
-    const statusText = page.locator('#podlove-assemblyai-metabox .podlove-assemblyai-status');
+    const statusText = page.locator('#ai-transcripts-for-podlove-metabox .ai-transcripts-for-podlove-status');
     await expect(statusText).toContainText('Transcribing');
   });
 
@@ -100,11 +100,11 @@ test.describe('Episode Meta Box', () => {
     await page.goto(FIXTURE_URL);
     await page.evaluate((o) => (window as any).__initMetabox(o), { initialStatus: 'imported' });
 
-    const success = page.locator('#podlove-assemblyai-metabox .podlove-assemblyai-success');
+    const success = page.locator('#ai-transcripts-for-podlove-metabox .ai-transcripts-for-podlove-success');
     await expect(success).toBeVisible();
     await expect(success).toHaveText('Transcript imported');
 
-    const btn = page.locator('#podlove-assemblyai-metabox [data-action="reset"]');
+    const btn = page.locator('#ai-transcripts-for-podlove-metabox [data-action="reset"]');
     await expect(btn).toBeVisible();
     await expect(btn).toHaveText('Transcribe again');
   });
@@ -113,16 +113,16 @@ test.describe('Episode Meta Box', () => {
     const configCalled   = { called: false };
     const transcribeCalled = { called: false };
 
-    await page.route('**/podlove-assemblyai/v1/config', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/config', (route) => {
       configCalled.called = true;
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ has_api_key: true }) });
     });
-    await page.route('**/podlove-assemblyai/v1/transcribe/42', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/transcribe/42', (route) => {
       transcribeCalled.called = true;
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ transcript_id: 'tx_abc', status: 'queued' }) });
     });
     // Status polling — return processing so we don't proceed to import automatically.
-    await page.route('**/podlove-assemblyai/v1/status/42', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/status/42', (route) => {
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ status: 'processing' }) });
     });
 
@@ -135,7 +135,7 @@ test.describe('Episode Meta Box', () => {
 
     // After clicking, the JS first fetches /config synchronously, so we wait
     // for the submitting spinner.
-    await expect(page.locator('.podlove-assemblyai-status')).toBeVisible({ timeout: 5_000 });
+    await expect(page.locator('.ai-transcripts-for-podlove-status')).toBeVisible({ timeout: 5_000 });
 
     // Both endpoints should have been hit.
     expect(configCalled.called).toBe(true);
@@ -143,14 +143,14 @@ test.describe('Episode Meta Box', () => {
   });
 
   test('shows submitting spinner immediately after clicking start', async ({ page }) => {
-    await page.route('**/podlove-assemblyai/v1/config', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/config', (route) => {
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ has_api_key: true }) });
     });
     // Delay transcribe response so we can observe the submitting state.
-    await page.route('**/podlove-assemblyai/v1/transcribe/42', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/transcribe/42', (route) => {
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ transcript_id: 'tx_abc', status: 'queued' }) });
     });
-    await page.route('**/podlove-assemblyai/v1/status/42', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/status/42', (route) => {
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ status: 'processing' }) });
     });
 
@@ -160,18 +160,18 @@ test.describe('Episode Meta Box', () => {
     await page.locator('[data-action="transcribe"]').click();
 
     // The spinner wrapper must appear (either submitting or processing state).
-    await expect(page.locator('.podlove-assemblyai-status')).toBeVisible({ timeout: 5_000 });
+    await expect(page.locator('.ai-transcripts-for-podlove-status')).toBeVisible({ timeout: 5_000 });
     await expect(page.locator('.spinner.is-active')).toBeVisible();
   });
 
   test('shows processing state with status label while polling', async ({ page }) => {
-    await page.route('**/podlove-assemblyai/v1/config', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/config', (route) => {
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ has_api_key: true }) });
     });
-    await page.route('**/podlove-assemblyai/v1/transcribe/42', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/transcribe/42', (route) => {
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ transcript_id: 'tx_abc', status: 'processing' }) });
     });
-    await page.route('**/podlove-assemblyai/v1/status/42', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/status/42', (route) => {
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ status: 'processing' }) });
     });
 
@@ -181,21 +181,21 @@ test.describe('Episode Meta Box', () => {
     await page.locator('[data-action="transcribe"]').click();
 
     // Wait for the processing state to be rendered (includes status label).
-    await expect(page.locator('.podlove-assemblyai-status')).toContainText('Transcribing', { timeout: 5_000 });
+    await expect(page.locator('.ai-transcripts-for-podlove-status')).toContainText('Transcribing', { timeout: 5_000 });
   });
 
   test('shows imported state after successful full transcription flow', async ({ page }) => {
-    await page.route('**/podlove-assemblyai/v1/config', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/config', (route) => {
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ has_api_key: true }) });
     });
-    await page.route('**/podlove-assemblyai/v1/transcribe/42', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/transcribe/42', (route) => {
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ transcript_id: 'tx_abc', status: 'queued' }) });
     });
     // Return 'completed' on first status poll.
-    await page.route('**/podlove-assemblyai/v1/status/42', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/status/42', (route) => {
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ status: 'completed' }) });
     });
-    await page.route('**/podlove-assemblyai/v1/import/42', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/import/42', (route) => {
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ success: true }) });
     });
 
@@ -216,15 +216,15 @@ test.describe('Episode Meta Box', () => {
 
     // The 'imported' state should eventually appear (poll interval is 5 s in
     // production; allow up to 15 s in tests on slow CI).
-    await expect(page.locator('.podlove-assemblyai-success')).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator('.ai-transcripts-for-podlove-success')).toBeVisible({ timeout: 15_000 });
     await expect(page.locator('[data-action="reset"]')).toHaveText('Transcribe again');
   });
 
   test('shows error state when transcribe API call fails', async ({ page }) => {
-    await page.route('**/podlove-assemblyai/v1/config', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/config', (route) => {
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ has_api_key: true }) });
     });
-    await page.route('**/podlove-assemblyai/v1/transcribe/42', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/transcribe/42', (route) => {
       route.fulfill({ status: 500, contentType: 'application/json', body: JSON.stringify({ error: 'AssemblyAI error' }) });
     });
 
@@ -233,8 +233,8 @@ test.describe('Episode Meta Box', () => {
 
     await page.locator('[data-action="transcribe"]').click();
 
-    await expect(page.locator('.podlove-assemblyai-error')).toBeVisible({ timeout: 5_000 });
-    await expect(page.locator('.podlove-assemblyai-error')).toContainText('AssemblyAI error');
+    await expect(page.locator('.ai-transcripts-for-podlove-error')).toBeVisible({ timeout: 5_000 });
+    await expect(page.locator('.ai-transcripts-for-podlove-error')).toContainText('AssemblyAI error');
 
     // Retry button must also appear.
     await expect(page.locator('[data-action="reset"]')).toHaveText('Retry');
@@ -243,12 +243,12 @@ test.describe('Episode Meta Box', () => {
   test('confirm dialog appears when replacing an existing transcript', async ({ page }) => {
     // Stub window.confirm to capture whether it was called and return false
     // (user declines) so we can verify no transcribe call is made.
-    await page.route('**/podlove-assemblyai/v1/config', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/config', (route) => {
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ has_api_key: true }) });
     });
 
     let transcribeCalled = false;
-    await page.route('**/podlove-assemblyai/v1/transcribe/42', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/transcribe/42', (route) => {
       transcribeCalled = true;
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ transcript_id: 'tx_abc', status: 'queued' }) });
     });
@@ -285,13 +285,13 @@ test.describe('Episode Meta Box', () => {
   });
 
   test('confirm dialog accept proceeds with transcription', async ({ page }) => {
-    await page.route('**/podlove-assemblyai/v1/config', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/config', (route) => {
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ has_api_key: true }) });
     });
-    await page.route('**/podlove-assemblyai/v1/transcribe/42', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/transcribe/42', (route) => {
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ transcript_id: 'tx_abc', status: 'queued' }) });
     });
-    await page.route('**/podlove-assemblyai/v1/status/42', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/status/42', (route) => {
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ status: 'processing' }) });
     });
 
@@ -307,15 +307,15 @@ test.describe('Episode Meta Box', () => {
     await page.locator('[data-action="transcribe"]').click();
 
     // After accepting, transcription starts and spinner appears.
-    await expect(page.locator('.podlove-assemblyai-status')).toBeVisible({ timeout: 5_000 });
+    await expect(page.locator('.ai-transcripts-for-podlove-status')).toBeVisible({ timeout: 5_000 });
     await expect(page.locator('.spinner.is-active')).toBeVisible();
   });
 
   test('retry button resets to idle state', async ({ page }) => {
-    await page.route('**/podlove-assemblyai/v1/config', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/config', (route) => {
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ has_api_key: true }) });
     });
-    await page.route('**/podlove-assemblyai/v1/transcribe/42', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/transcribe/42', (route) => {
       route.fulfill({ status: 500, contentType: 'application/json', body: JSON.stringify({ error: 'Server error' }) });
     });
 
@@ -324,14 +324,14 @@ test.describe('Episode Meta Box', () => {
 
     // Trigger the error state.
     await page.locator('[data-action="transcribe"]').click();
-    await expect(page.locator('.podlove-assemblyai-error')).toBeVisible({ timeout: 5_000 });
+    await expect(page.locator('.ai-transcripts-for-podlove-error')).toBeVisible({ timeout: 5_000 });
 
     // Click retry.
     await page.locator('[data-action="reset"]').click();
 
     // Must return to idle state showing the start button.
     await expect(page.locator('[data-action="transcribe"]')).toBeVisible();
-    await expect(page.locator('.podlove-assemblyai-error')).not.toBeVisible();
+    await expect(page.locator('.ai-transcripts-for-podlove-error')).not.toBeVisible();
   });
 
   test('transcribe again button resets to idle state', async ({ page }) => {
@@ -339,12 +339,12 @@ test.describe('Episode Meta Box', () => {
     await page.evaluate((o) => (window as any).__initMetabox(o), { initialStatus: 'imported' });
 
     // Should be in imported state.
-    await expect(page.locator('.podlove-assemblyai-success')).toBeVisible();
+    await expect(page.locator('.ai-transcripts-for-podlove-success')).toBeVisible();
 
     await page.locator('[data-action="reset"]').click();
 
     // Must return to idle.
     await expect(page.locator('[data-action="transcribe"]')).toBeVisible();
-    await expect(page.locator('.podlove-assemblyai-success')).not.toBeVisible();
+    await expect(page.locator('.ai-transcripts-for-podlove-success')).not.toBeVisible();
   });
 });

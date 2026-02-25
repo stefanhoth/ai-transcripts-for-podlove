@@ -9,14 +9,14 @@
     .spinner.is-active { visibility: visible; }
     .button { cursor: pointer; }
     .button-primary { font-weight: bold; }
-    .podlove-assemblyai-success { color: green; }
-    .podlove-assemblyai-error   { color: red; }
+    .ai-transcripts-success { color: green; }
+    .ai-transcripts-error   { color: red; }
   </style>
 </head>
 <body>
 
 <!-- Container expected by metabox.js -->
-<div id="podlove-assemblyai-metabox"></div>
+<div id="ai-transcripts-metabox"></div>
 
 <script>
   /**
@@ -34,13 +34,13 @@
    */
   window.__initMetabox = function (overrides) {
     // Reset container innerHTML so any previous render is cleared.
-    var container = document.getElementById('podlove-assemblyai-metabox');
+    var container = document.getElementById('ai-transcripts-metabox');
     if (container) container.innerHTML = '';
 
-    window.podloveAssemblyAI = Object.assign(
+    window.aiTranscripts = Object.assign(
       {
         postId: 42,
-        restBase: 'http://localhost:8080/wp-json/podlove-assemblyai/v1',
+        restBase: 'http://localhost:8080/wp-json/ai-transcripts/v1',
         nonce: 'test-nonce-1234',
         initialStatus: null,
         i18n: {

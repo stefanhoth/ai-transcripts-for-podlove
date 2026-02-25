@@ -2,11 +2,11 @@
  * E2E tests for the Settings / Batch Transcription page (settings.js).
  *
  * Tests load a standalone HTML fixture page that provides the expected DOM
- * structure and window.podloveAssemblyAISettings config object. All REST
+ * structure and window.aiTranscriptsSettings config object. All REST
  * API calls are intercepted with page.route() — no running WordPress
  * instance is required.
  *
- * REST base intercepted: http://localhost:8080/wp-json/podlove-assemblyai/v1/*
+ * REST base intercepted: http://localhost:8080/wp-json/ai-transcripts-for-podlove/v1/*
  */
 
 import { test, expect, Page } from '@playwright/test';
@@ -55,7 +55,7 @@ async function loadSettings(
   episodesResponse: { status: number; body: unknown },
   overrides: Record<string, unknown> = {}
 ) {
-  await page.route('**/podlove-assemblyai/v1/episodes', (route) => {
+  await page.route('**/ai-transcripts-for-podlove/v1/episodes', (route) => {
     route.fulfill({
       status: episodesResponse.status,
       contentType: 'application/json',
@@ -68,7 +68,7 @@ async function loadSettings(
 
   // Wait for loading state to be replaced.
   await page.waitForFunction(() => {
-    const c = document.getElementById('podlove-assemblyai-batch');
+    const c = document.getElementById('ai-transcripts-for-podlove-batch');
     return c !== null && !c.innerHTML.includes('Loading episodes');
   }, { timeout: 10_000 });
 }
@@ -97,14 +97,14 @@ test.describe('Settings Page', () => {
   test('shows no-episodes message when episode list is empty', async ({ page }) => {
     await loadSettings(page, { status: 200, body: [] });
 
-    await expect(page.locator('#podlove-assemblyai-batch')).toContainText('No episodes found.');
+    await expect(page.locator('#ai-transcripts-for-podlove-batch')).toContainText('No episodes found.');
     await expect(page.locator('[data-action="batch-transcribe"]')).not.toBeVisible();
   });
 
   test('shows no-episodes message when API returns error', async ({ page }) => {
     await loadSettings(page, { status: 500, body: { error: 'Server error' } });
 
-    await expect(page.locator('#podlove-assemblyai-batch')).toContainText('No episodes found.');
+    await expect(page.locator('#ai-transcripts-for-podlove-batch')).toContainText('No episodes found.');
   });
 
   test('select all button checks all enabled checkboxes', async ({ page }) => {
@@ -181,7 +181,7 @@ test.describe('Settings Page', () => {
 
     // Nothing selected by default — clicking should be a no-op (no API call).
     let transcribeCalled = false;
-    await page.route('**/podlove-assemblyai/v1/transcribe/**', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/transcribe/**', (route) => {
       transcribeCalled = true;
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ transcript_id: 'x', status: 'queued' }) });
     });
@@ -196,7 +196,7 @@ test.describe('Settings Page', () => {
     const transcribedIds: number[] = [];
     const importedIds: number[]    = [];
 
-    await page.route('**/podlove-assemblyai/v1/episodes', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/episodes', (route) => {
       route.fulfill({
         status: 200,
         contentType: 'application/json',
@@ -204,18 +204,18 @@ test.describe('Settings Page', () => {
       });
     });
 
-    await page.route('**/podlove-assemblyai/v1/transcribe/**', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/transcribe/**', (route) => {
       const url    = new URL(route.request().url());
       const postId = parseInt(url.pathname.split('/').pop()!, 10);
       transcribedIds.push(postId);
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ transcript_id: 'tx_' + postId, status: 'queued' }) });
     });
 
-    await page.route('**/podlove-assemblyai/v1/status/**', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/status/**', (route) => {
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ status: 'completed' }) });
     });
 
-    await page.route('**/podlove-assemblyai/v1/import/**', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/import/**', (route) => {
       const url    = new URL(route.request().url());
       const postId = parseInt(url.pathname.split('/').pop()!, 10);
       importedIds.push(postId);
@@ -225,7 +225,7 @@ test.describe('Settings Page', () => {
     await page.goto(FIXTURE_URL);
     await page.evaluate((o) => (window as any).__initSettings(o), {});
     await page.waitForFunction(() => {
-      const c = document.getElementById('podlove-assemblyai-batch');
+      const c = document.getElementById('ai-transcripts-for-podlove-batch');
       return c !== null && !c.innerHTML.includes('Loading episodes');
     });
 
@@ -244,7 +244,7 @@ test.describe('Settings Page', () => {
   });
 
   test('progress message updates as each episode is processed', async ({ page }) => {
-    await page.route('**/podlove-assemblyai/v1/episodes', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/episodes', (route) => {
       route.fulfill({
         status: 200,
         contentType: 'application/json',
@@ -252,20 +252,20 @@ test.describe('Settings Page', () => {
       });
     });
 
-    await page.route('**/podlove-assemblyai/v1/transcribe/**', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/transcribe/**', (route) => {
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ transcript_id: 'tx_x', status: 'queued' }) });
     });
-    await page.route('**/podlove-assemblyai/v1/status/**', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/status/**', (route) => {
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ status: 'completed' }) });
     });
-    await page.route('**/podlove-assemblyai/v1/import/**', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/import/**', (route) => {
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ success: true }) });
     });
 
     await page.goto(FIXTURE_URL);
     await page.evaluate((o) => (window as any).__initSettings(o), {});
     await page.waitForFunction(() => {
-      const c = document.getElementById('podlove-assemblyai-batch');
+      const c = document.getElementById('ai-transcripts-for-podlove-batch');
       return c !== null && !c.innerHTML.includes('Loading episodes');
     });
 
@@ -282,7 +282,7 @@ test.describe('Settings Page', () => {
   test('cancel stops batch processing after current episode', async ({ page }) => {
     let transcribeCallCount = 0;
 
-    await page.route('**/podlove-assemblyai/v1/episodes', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/episodes', (route) => {
       route.fulfill({
         status: 200,
         contentType: 'application/json',
@@ -296,21 +296,21 @@ test.describe('Settings Page', () => {
 
     // First transcribe completes immediately; subsequent ones should not be
     // reached because we cancel after the first.
-    await page.route('**/podlove-assemblyai/v1/transcribe/**', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/transcribe/**', (route) => {
       transcribeCallCount++;
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ transcript_id: 'tx_x', status: 'queued' }) });
     });
-    await page.route('**/podlove-assemblyai/v1/status/**', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/status/**', (route) => {
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ status: 'completed' }) });
     });
-    await page.route('**/podlove-assemblyai/v1/import/**', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/import/**', (route) => {
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ success: true }) });
     });
 
     await page.goto(FIXTURE_URL);
     await page.evaluate((o) => (window as any).__initSettings(o), {});
     await page.waitForFunction(() => {
-      const c = document.getElementById('podlove-assemblyai-batch');
+      const c = document.getElementById('ai-transcripts-for-podlove-batch');
       return c !== null && !c.innerHTML.includes('Loading episodes');
     });
 
@@ -331,27 +331,27 @@ test.describe('Settings Page', () => {
   });
 
   test('episode row status cell updates to Completed after import', async ({ page }) => {
-    await page.route('**/podlove-assemblyai/v1/episodes', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/episodes', (route) => {
       route.fulfill({
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify([episodeWithAudioNoTranscript]),
       });
     });
-    await page.route('**/podlove-assemblyai/v1/transcribe/1', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/transcribe/1', (route) => {
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ transcript_id: 'tx_1', status: 'queued' }) });
     });
-    await page.route('**/podlove-assemblyai/v1/status/1', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/status/1', (route) => {
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ status: 'completed' }) });
     });
-    await page.route('**/podlove-assemblyai/v1/import/1', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/import/1', (route) => {
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ success: true }) });
     });
 
     await page.goto(FIXTURE_URL);
     await page.evaluate((o) => (window as any).__initSettings(o), {});
     await page.waitForFunction(() => {
-      const c = document.getElementById('podlove-assemblyai-batch');
+      const c = document.getElementById('ai-transcripts-for-podlove-batch');
       return c !== null && !c.innerHTML.includes('Loading episodes');
     });
 
@@ -364,21 +364,21 @@ test.describe('Settings Page', () => {
   });
 
   test('episode row status cell shows Failed when transcribe API returns error', async ({ page }) => {
-    await page.route('**/podlove-assemblyai/v1/episodes', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/episodes', (route) => {
       route.fulfill({
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify([episodeWithAudioNoTranscript]),
       });
     });
-    await page.route('**/podlove-assemblyai/v1/transcribe/1', (route) => {
+    await page.route('**/ai-transcripts-for-podlove/v1/transcribe/1', (route) => {
       route.fulfill({ status: 500, contentType: 'application/json', body: JSON.stringify({ error: 'quota exceeded' }) });
     });
 
     await page.goto(FIXTURE_URL);
     await page.evaluate((o) => (window as any).__initSettings(o), {});
     await page.waitForFunction(() => {
-      const c = document.getElementById('podlove-assemblyai-batch');
+      const c = document.getElementById('ai-transcripts-for-podlove-batch');
       return c !== null && !c.innerHTML.includes('Loading episodes');
     });
 

@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
 /**
- * Playwright configuration for Podlove AssemblyAI plugin E2E tests.
+ * Playwright configuration for AI Transcripts for Podlove plugin E2E tests.
  *
  * Tests use standalone HTML fixture pages that load the plugin JS directly,
  * so no running WordPress instance is required. The baseURL is used for

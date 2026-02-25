@@ -15,7 +15,7 @@
 <body>
 
 <!-- Container expected by settings.js -->
-<div id="podlove-assemblyai-batch"></div>
+<div id="ai-transcripts-batch"></div>
 
 <script>
   /**
@@ -25,12 +25,12 @@
    * REST calls are intercepted via page.route() in the test file.
    */
   window.__initSettings = function (overrides) {
-    var container = document.getElementById('podlove-assemblyai-batch');
+    var container = document.getElementById('ai-transcripts-batch');
     if (container) container.innerHTML = '';
 
-    window.podloveAssemblyAISettings = Object.assign(
+    window.aiTranscriptsSettings = Object.assign(
       {
-        restBase: 'http://localhost:8080/wp-json/podlove-assemblyai/v1',
+        restBase: 'http://localhost:8080/wp-json/ai-transcripts/v1',
         nonce: 'test-nonce-1234',
         i18n: {
           loading:       'Loading episodes…',
