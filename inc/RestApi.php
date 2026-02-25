@@ -10,6 +10,7 @@ class RestApi
 {
     public const API_NAMESPACE = 'ai-transcripts-for-podlove/v1';
     public const ASSEMBLYAI_BASE_URL = 'https://api.assemblyai.com/v2';
+    private const VALID_STATUSES = ['queued', 'processing', 'completed', 'error'];
 
     public function register_routes()
     {
@@ -115,7 +116,7 @@ class RestApi
         $post_id = $request->get_param('post_id');
         if ($post_id) {
             $post_id = absint($post_id);
-            $episode = Episode::find_or_create_by_post_id($post_id);
+            $episode = Episode::find_one_by_property('post_id', $post_id);
             $result['has_transcript'] = $episode
                 ? (bool) \Podlove\Modules\Transcripts\Model\Transcript::exists_for_episode($episode->id)
                 : false;
@@ -137,7 +138,7 @@ class RestApi
         $episodes = [];
 
         foreach ($posts as $post) {
-            $episode = Episode::find_or_create_by_post_id($post->ID);
+            $episode = Episode::find_one_by_property('post_id', $post->ID);
 
             $has_audio = false;
             $has_transcript = false;
@@ -212,7 +213,7 @@ class RestApi
             $error = 'Failed to submit transcription to AssemblyAI';
             $body = json_decode($raw_body, true);
             if (is_array($body) && isset($body['error'])) {
-                $error = $body['error'];
+                $error = sanitize_text_field($body['error']);
             }
 
             return new \WP_REST_Response(['error' => $error], 500);
@@ -226,12 +227,14 @@ class RestApi
 
         $transcript_id = sanitize_text_field($body['id']);
 
+        $status = $this->sanitize_assemblyai_status($body['status']);
+
         update_post_meta($post_id, 'assemblyai_transcript_id', $transcript_id);
-        update_post_meta($post_id, 'assemblyai_status', $body['status']);
+        update_post_meta($post_id, 'assemblyai_status', $status);
 
         return new \WP_REST_Response([
             'transcript_id' => $transcript_id,
-            'status' => $body['status'],
+            'status' => $status,
         ]);
     }
 
@@ -272,14 +275,14 @@ class RestApi
             return new \WP_REST_Response(['error' => 'Unexpected response from AssemblyAI'], 500);
         }
 
-        $status = $body['status'];
+        $status = $this->sanitize_assemblyai_status($body['status']);
 
         update_post_meta($post_id, 'assemblyai_status', $status);
 
         $result = ['status' => $status];
 
         if ($status === 'error' && isset($body['error'])) {
-            $result['error'] = $body['error'];
+            $result['error'] = sanitize_text_field($body['error']);
         }
 
         return new \WP_REST_Response($result);
@@ -407,6 +410,18 @@ class RestApi
     private function episode_has_audio($episode)
     {
         return $this->get_audio_url($episode) !== null;
+    }
+
+    /**
+     * Validate an AssemblyAI status value against the known whitelist.
+     *
+     * @param string $status raw status from API response
+     *
+     * @return string validated status or 'error' as fallback
+     */
+    private function sanitize_assemblyai_status($status)
+    {
+        return in_array($status, self::VALID_STATUSES, true) ? $status : 'error';
     }
 
     /**
