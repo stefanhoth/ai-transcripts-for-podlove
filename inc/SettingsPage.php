@@ -261,9 +261,9 @@ class SettingsPage
                                     <p class="description">
                                         <?php
                                         printf(
-                                            /* translators: %s: link to assemblyai.com */
-                                            esc_html__('Get your API key at %s', 'ai-transcripts-for-podlove'),
-                                            '<a href="https://www.assemblyai.com/" target="_blank" rel="noopener">assemblyai.com</a>'
+                                            /* translators: %s: link to AssemblyAI API key documentation */
+                                            esc_html__('Get your API key from the %s.', 'ai-transcripts-for-podlove'),
+                                            '<a href="https://www.assemblyai.com/docs/deployment/account-management#api-keys" target="_blank" rel="noopener">AssemblyAI dashboard</a>'
                                         );
                                         ?>
                                     </p>
@@ -275,6 +275,16 @@ class SettingsPage
                 </details>
             <?php else : ?>
                 <h2><?php esc_html_e('API Key', 'ai-transcripts-for-podlove'); ?></h2>
+
+                <p class="description">
+                    <?php
+                    printf(
+                        /* translators: %s: link to AssemblyAI speech-to-text product page */
+                        esc_html__('This plugin uses %s to generate transcripts from your podcast audio.', 'ai-transcripts-for-podlove'),
+                        '<a href="https://www.assemblyai.com/products/speech-to-text" target="_blank" rel="noopener">AssemblyAI Speech-to-Text</a>'
+                    );
+                    ?>
+                </p>
 
                 <form method="post" action="options.php">
                     <?php settings_fields('ai_transcripts'); ?>
@@ -289,9 +299,9 @@ class SettingsPage
                                 <p class="description">
                                     <?php
                                     printf(
-                                        /* translators: %s: link to assemblyai.com */
-                                        esc_html__('Get your API key at %s', 'ai-transcripts-for-podlove'),
-                                        '<a href="https://www.assemblyai.com/" target="_blank" rel="noopener">assemblyai.com</a>'
+                                        /* translators: %s: link to AssemblyAI API key documentation */
+                                        esc_html__('Get your API key from the %s.', 'ai-transcripts-for-podlove'),
+                                        '<a href="https://www.assemblyai.com/docs/deployment/account-management#api-keys" target="_blank" rel="noopener">AssemblyAI dashboard</a>'
                                     );
                                     ?>
                                 </p>
