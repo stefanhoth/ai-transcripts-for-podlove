@@ -180,6 +180,11 @@ class RestApi
             return new \WP_REST_Response(['error' => 'No active audio file found for this episode'], 400);
         }
 
+        $url_error = $this->validate_public_url($audio_url);
+        if ($url_error) {
+            return new \WP_REST_Response(['error' => $url_error], 400);
+        }
+
         $payload = [
             'audio_url' => $audio_url,
             'speech_model' => 'best',
@@ -410,6 +415,42 @@ class RestApi
     private function episode_has_audio($episode)
     {
         return $this->get_audio_url($episode) !== null;
+    }
+
+    /**
+     * Check that a URL is publicly reachable by AssemblyAI.
+     *
+     * Returns an error message string if the URL is invalid, or null if OK.
+     *
+     * @param string $url
+     *
+     * @return string|null error message or null
+     */
+    private function validate_public_url($url)
+    {
+        $parsed = wp_parse_url($url);
+
+        if (!$parsed || empty($parsed['scheme']) || empty($parsed['host'])) {
+            return 'Audio URL is not a valid URL.';
+        }
+
+        if (!in_array($parsed['scheme'], ['http', 'https'], true)) {
+            return 'Audio URL must use http or https.';
+        }
+
+        $host = strtolower($parsed['host']);
+
+        if ($host === 'localhost' || str_ends_with($host, '.local') || str_ends_with($host, '.internal')) {
+            return 'Audio URL points to a local address that AssemblyAI cannot reach.';
+        }
+
+        // Resolve hostname and reject private/reserved IP ranges.
+        $ip = gethostbyname($host);
+        if ($ip !== $host && !filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+            return 'Audio URL resolves to a private or reserved IP address that AssemblyAI cannot reach.';
+        }
+
+        return null;
     }
 
     /**
