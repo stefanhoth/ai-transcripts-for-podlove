@@ -1,13 +1,13 @@
 (function () {
     'use strict';
 
-    var config = window.podloveAssemblyAISettings;
+    var config = window.aiTranscriptsSettings;
     if (!config) return;
 
     var POLL_INTERVAL = 5000;
     var MAX_POLLS = 360;
 
-    var batchContainer = document.getElementById('podlove-assemblyai-batch');
+    var batchContainer = document.getElementById('ai-transcripts-batch');
     if (!batchContainer) return;
 
     var episodes = [];
@@ -58,7 +58,7 @@
             return;
         }
 
-        var html = '<div class="podlove-assemblyai-batch-toolbar" style="margin-bottom:12px;">';
+        var html = '<div class="ai-transcripts-batch-toolbar" style="margin-bottom:12px;">';
         html += '<button type="button" class="button" data-action="select-all">' + escHtml(config.i18n.selectAll) + '</button> ';
         html += '<button type="button" class="button" data-action="select-without">' + escHtml(config.i18n.selectWithout) + '</button> ';
         html += '<button type="button" class="button" data-action="deselect-all">' + escHtml(config.i18n.deselectAll) + '</button>';
@@ -171,7 +171,7 @@
 
     function showBatchConfirm(postIds, withTranscripts) {
         var names = withTranscripts.map(function (ep) { return ep.title; }).join(', ');
-        var confirmHtml = '<div class="podlove-assemblyai-confirm" style="margin-top:12px;">'
+        var confirmHtml = '<div class="ai-transcripts-confirm" style="margin-top:12px;">'
             + '<p>' + escHtml(config.i18n.batchConfirmReplace.replace('%episodes%', names)) + '</p>'
             + '<div style="display:flex;gap:8px;">'
             + '<button type="button" class="button button-primary" data-action="batch-confirm-yes">'
@@ -181,7 +181,7 @@
             + '</div></div>';
 
         // Insert confirmation after the table actions
-        var actionsDiv = batchContainer.querySelector('.podlove-assemblyai-confirm');
+        var actionsDiv = batchContainer.querySelector('.ai-transcripts-confirm');
         if (actionsDiv) actionsDiv.remove();
 
         batchContainer.insertAdjacentHTML('beforeend', confirmHtml);
@@ -190,7 +190,7 @@
         var noBtn = batchContainer.querySelector('[data-action="batch-confirm-no"]');
         if (yesBtn) yesBtn.addEventListener('click', function () { runBatch(postIds); });
         if (noBtn) noBtn.addEventListener('click', function () {
-            var el = batchContainer.querySelector('.podlove-assemblyai-confirm');
+            var el = batchContainer.querySelector('.ai-transcripts-confirm');
             if (el) el.remove();
         });
     }
@@ -207,7 +207,7 @@
         }
 
         // Remove any lingering confirmation
-        var confirmEl = batchContainer.querySelector('.podlove-assemblyai-confirm');
+        var confirmEl = batchContainer.querySelector('.ai-transcripts-confirm');
         if (confirmEl) confirmEl.remove();
 
         // Update toolbar (disable transcribe button, show cancel)

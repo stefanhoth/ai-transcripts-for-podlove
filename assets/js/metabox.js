@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    var config = window.podloveAssemblyAI;
+    var config = window.aiTranscripts;
     if (!config) return;
 
     var POLL_INTERVAL = 5000;
@@ -20,14 +20,14 @@
         pollTimer: null,
     };
 
-    var container = document.getElementById('podlove-assemblyai-metabox');
+    var container = document.getElementById('ai-transcripts-metabox');
     if (!container) return;
 
     // After a post-import reload, scroll back to this meta box.
     // Use a delay so the Gutenberg editor has time to finish rendering.
     try {
-        if (sessionStorage.getItem('podlove-assemblyai-scroll')) {
-            sessionStorage.removeItem('podlove-assemblyai-scroll');
+        if (sessionStorage.getItem('ai-transcripts-scroll')) {
+            sessionStorage.removeItem('ai-transcripts-scroll');
             setTimeout(function () {
                 container.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }, 1500);
@@ -75,12 +75,12 @@
                 html = renderSpinner(config.i18n.importing);
                 break;
             case 'imported':
-                html = '<p class="podlove-assemblyai-success">' + escHtml(config.i18n.imported) + '</p>'
+                html = '<p class="ai-transcripts-success">' + escHtml(config.i18n.imported) + '</p>'
                     + '<button type="button" class="button" data-action="transcribe-again">'
                     + escHtml(config.i18n.transcribeAgain) + '</button>';
                 break;
             case 'error':
-                html = '<p class="podlove-assemblyai-error">'
+                html = '<p class="ai-transcripts-error">'
                     + escHtml(state.error || config.i18n.error) + '</p>'
                     + '<button type="button" class="button" data-action="transcribe">'
                     + escHtml(config.i18n.retry) + '</button>';
@@ -97,9 +97,9 @@
     }
 
     function renderConfirm() {
-        return '<div class="podlove-assemblyai-confirm">'
+        return '<div class="ai-transcripts-confirm">'
             + '<p>' + escHtml(config.i18n.confirmReplace) + '</p>'
-            + '<div class="podlove-assemblyai-confirm-actions">'
+            + '<div class="ai-transcripts-confirm-actions">'
             + '<button type="button" class="button button-primary" data-action="confirm-yes">'
             + escHtml(config.i18n.confirmYes) + '</button>'
             + '<button type="button" class="button" data-action="confirm-no">'
@@ -108,7 +108,7 @@
     }
 
     function renderSpinner(label) {
-        return '<div class="podlove-assemblyai-status">'
+        return '<div class="ai-transcripts-status">'
             + '<span class="spinner is-active" style="float:none;"></span>'
             + '<span>' + escHtml(label) + '</span>'
             + '</div>';
@@ -239,7 +239,7 @@
 
             // Reload the page so the Podlove Transcripts section also updates.
             // Save scroll target so we can scroll back after reload.
-            try { sessionStorage.setItem('podlove-assemblyai-scroll', '1'); } catch (e) {}
+            try { sessionStorage.setItem('ai-transcripts-scroll', '1'); } catch (e) {}
             window.location.reload();
         }).catch(function () {
             setError(config.i18n.error);
