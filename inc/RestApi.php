@@ -1,6 +1,6 @@
 <?php
 
-namespace PodloveAssemblyAI;
+namespace AiTranscriptsForPodlove;
 
 use Podlove\Model\Episode;
 use Podlove\Model\EpisodeAsset;
@@ -8,7 +8,7 @@ use Podlove\Modules\Transcripts\Transcripts;
 
 class RestApi
 {
-    public const API_NAMESPACE = 'podlove-assemblyai/v1';
+    public const API_NAMESPACE = 'ai-transcripts-for-podlove/v1';
     public const ASSEMBLYAI_BASE_URL = 'https://api.assemblyai.com/v2';
 
     public function register_routes()
@@ -105,7 +105,7 @@ class RestApi
 
     public function get_config(\WP_REST_Request $request)
     {
-        $api_key = get_option('podlove_assemblyai_api_key', '');
+        $api_key = get_option('ai_transcripts_api_key', '');
 
         $result = [
             'has_api_key' => !empty($api_key),
@@ -163,7 +163,7 @@ class RestApi
     public function start_transcription(\WP_REST_Request $request)
     {
         $post_id = (int) $request->get_param('post_id');
-        $api_key = get_option('podlove_assemblyai_api_key', '');
+        $api_key = get_option('ai_transcripts_api_key', '');
 
         if (empty($api_key)) {
             return new \WP_REST_Response(['error' => 'API key not configured'], 400);
@@ -238,7 +238,7 @@ class RestApi
     public function get_status(\WP_REST_Request $request)
     {
         $post_id = (int) $request->get_param('post_id');
-        $api_key = get_option('podlove_assemblyai_api_key', '');
+        $api_key = get_option('ai_transcripts_api_key', '');
 
         if (empty($api_key)) {
             return new \WP_REST_Response(['error' => 'API key not configured'], 400);
@@ -288,7 +288,7 @@ class RestApi
     public function import_transcript(\WP_REST_Request $request)
     {
         $post_id = (int) $request->get_param('post_id');
-        $api_key = get_option('podlove_assemblyai_api_key', '');
+        $api_key = get_option('ai_transcripts_api_key', '');
 
         if (empty($api_key)) {
             return new \WP_REST_Response(['error' => 'API key not configured'], 400);

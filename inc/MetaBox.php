@@ -1,6 +1,6 @@
 <?php
 
-namespace PodloveAssemblyAI;
+namespace AiTranscriptsForPodlove;
 
 class MetaBox
 {
@@ -11,15 +11,15 @@ class MetaBox
 
     public function register()
     {
-        $api_key = get_option('podlove_assemblyai_api_key', '');
+        $api_key = get_option('ai_transcripts_api_key', '');
 
         if (empty($api_key)) {
             return;
         }
 
         add_meta_box(
-            'podlove-assemblyai',
-            __('AssemblyAI Transcription', 'podlove-assemblyai'),
+            'ai-transcripts-for-podlove',
+            __('AssemblyAI Transcription', 'ai-transcripts-for-podlove'),
             [$this, 'render'],
             'podcast',
             'normal',
@@ -33,44 +33,44 @@ class MetaBox
         $status = get_post_meta($post->ID, 'assemblyai_status', true);
 
         wp_enqueue_style(
-            'podlove-assemblyai-metabox',
-            PODLOVE_ASSEMBLYAI_URL . 'assets/css/metabox.css',
+            'ai-transcripts-for-podlove-metabox',
+            AI_TRANSCRIPTS_URL . 'assets/css/metabox.css',
             [],
-            PODLOVE_ASSEMBLYAI_VERSION
+            AI_TRANSCRIPTS_VERSION
         );
 
         wp_enqueue_script(
-            'podlove-assemblyai-metabox',
-            PODLOVE_ASSEMBLYAI_URL . 'assets/js/metabox.js',
+            'ai-transcripts-for-podlove-metabox',
+            AI_TRANSCRIPTS_URL . 'assets/js/metabox.js',
             ['wp-api-fetch'],
-            PODLOVE_ASSEMBLYAI_VERSION,
+            AI_TRANSCRIPTS_VERSION,
             true
         );
 
-        wp_localize_script('podlove-assemblyai-metabox', 'podloveAssemblyAI', [
+        wp_localize_script('ai-transcripts-for-podlove-metabox', 'aiTranscripts', [
             'postId' => $post->ID,
-            'restBase' => rest_url('podlove-assemblyai/v1'),
+            'restBase' => rest_url('ai-transcripts-for-podlove/v1'),
             'nonce' => wp_create_nonce('wp_rest'),
             'initialStatus' => $status ?: 'idle',
             'transcriptId' => $transcript_id ?: '',
             'i18n' => [
-                'startTranscription' => __('Start Transcription', 'podlove-assemblyai'),
-                'submitting' => __('Submitting to AssemblyAI...', 'podlove-assemblyai'),
-                'transcribing' => __('Transcribing...', 'podlove-assemblyai'),
-                'importing' => __('Importing transcript...', 'podlove-assemblyai'),
-                'imported' => __('Transcript imported successfully.', 'podlove-assemblyai'),
-                'error' => __('An error occurred.', 'podlove-assemblyai'),
-                'retry' => __('Retry', 'podlove-assemblyai'),
-                'transcribeAgain' => __('Transcribe Again', 'podlove-assemblyai'),
-                'noAudio' => __('No active audio files available for this episode.', 'podlove-assemblyai'),
-                'confirmReplace' => __('This episode already has a transcript. Starting a new transcription will replace it.', 'podlove-assemblyai'),
-                'confirmYes' => __('Replace Transcript', 'podlove-assemblyai'),
-                'confirmNo' => __('Cancel', 'podlove-assemblyai'),
-                'queued' => __('queued', 'podlove-assemblyai'),
-                'processing' => __('processing', 'podlove-assemblyai'),
+                'startTranscription' => __('Start Transcription', 'ai-transcripts-for-podlove'),
+                'submitting' => __('Submitting to AssemblyAI...', 'ai-transcripts-for-podlove'),
+                'transcribing' => __('Transcribing...', 'ai-transcripts-for-podlove'),
+                'importing' => __('Importing transcript...', 'ai-transcripts-for-podlove'),
+                'imported' => __('Transcript imported successfully.', 'ai-transcripts-for-podlove'),
+                'error' => __('An error occurred.', 'ai-transcripts-for-podlove'),
+                'retry' => __('Retry', 'ai-transcripts-for-podlove'),
+                'transcribeAgain' => __('Transcribe Again', 'ai-transcripts-for-podlove'),
+                'noAudio' => __('No active audio files available for this episode.', 'ai-transcripts-for-podlove'),
+                'confirmReplace' => __('This episode already has a transcript. Starting a new transcription will replace it.', 'ai-transcripts-for-podlove'),
+                'confirmYes' => __('Replace Transcript', 'ai-transcripts-for-podlove'),
+                'confirmNo' => __('Cancel', 'ai-transcripts-for-podlove'),
+                'queued' => __('queued', 'ai-transcripts-for-podlove'),
+                'processing' => __('processing', 'ai-transcripts-for-podlove'),
             ],
         ]);
 
-        echo '<div id="podlove-assemblyai-metabox"></div>';
+        echo '<div id="ai-transcripts-for-podlove-metabox"></div>';
     }
 }

@@ -1,11 +1,11 @@
 <?php
 
-namespace PodloveAssemblyAI;
+namespace AiTranscriptsForPodlove;
 
 class SettingsPage
 {
-    public const OPTION_API_KEY = 'podlove_assemblyai_api_key';
-    public const MENU_SLUG = 'podlove-assemblyai';
+    public const OPTION_API_KEY = 'ai_transcripts_api_key';
+    public const MENU_SLUG = 'ai-transcripts-for-podlove';
 
     public function __construct()
     {
@@ -21,8 +21,8 @@ class SettingsPage
 
         add_submenu_page(
             $parent,
-            __('Podlove AssemblyAI', 'podlove-assemblyai'),
-            __('AI Transcription', 'podlove-assemblyai'),
+            __('AI Transcripts for Podlove', 'ai-transcripts-for-podlove'),
+            __('AI Transcription', 'ai-transcripts-for-podlove'),
             'edit_posts',
             self::MENU_SLUG,
             [$this, 'render_page']
@@ -31,7 +31,7 @@ class SettingsPage
 
     public function register_settings()
     {
-        register_setting('podlove_assemblyai', self::OPTION_API_KEY, [
+        register_setting('ai_transcripts', self::OPTION_API_KEY, [
             'type' => 'string',
             'sanitize_callback' => [$this, 'validate_api_key'],
             'default' => '',
@@ -58,7 +58,7 @@ class SettingsPage
             add_settings_error(
                 self::OPTION_API_KEY,
                 'connection_failed',
-                __('Could not connect to AssemblyAI to verify the key. Key saved anyway.', 'podlove-assemblyai'),
+                __('Could not connect to AssemblyAI to verify the key. Key saved anyway.', 'ai-transcripts-for-podlove'),
                 'warning'
             );
             return $value;
@@ -70,7 +70,7 @@ class SettingsPage
             add_settings_error(
                 self::OPTION_API_KEY,
                 'invalid_key',
-                __('AssemblyAI rejected this API key. Please check it and try again.', 'podlove-assemblyai'),
+                __('AssemblyAI rejected this API key. Please check it and try again.', 'ai-transcripts-for-podlove'),
                 'error'
             );
             return ''; // don't save invalid key
@@ -120,16 +120,16 @@ class SettingsPage
     {
         switch ($status) {
             case 'valid':
-                return '<span class="podlove-assemblyai-key-status podlove-assemblyai-key-valid" title="'
-                    . esc_attr__('API key is valid', 'podlove-assemblyai')
+                return '<span class="ai-transcripts-for-podlove-key-status ai-transcripts-for-podlove-key-valid" title="'
+                    . esc_attr__('API key is valid', 'ai-transcripts-for-podlove')
                     . '">&#10003;</span>';
             case 'invalid':
-                return '<span class="podlove-assemblyai-key-status podlove-assemblyai-key-invalid" title="'
-                    . esc_attr__('API key is invalid', 'podlove-assemblyai')
+                return '<span class="ai-transcripts-for-podlove-key-status ai-transcripts-for-podlove-key-invalid" title="'
+                    . esc_attr__('API key is invalid', 'ai-transcripts-for-podlove')
                     . '">&#10007;</span>';
             case 'error':
-                return '<span class="podlove-assemblyai-key-status podlove-assemblyai-key-error" title="'
-                    . esc_attr__('Could not reach AssemblyAI to verify the key', 'podlove-assemblyai')
+                return '<span class="ai-transcripts-for-podlove-key-status ai-transcripts-for-podlove-key-error" title="'
+                    . esc_attr__('Could not reach AssemblyAI to verify the key', 'ai-transcripts-for-podlove')
                     . '">?</span>';
             default:
                 return '';
@@ -144,44 +144,44 @@ class SettingsPage
 
         if ($has_key) {
             wp_enqueue_script(
-                'podlove-assemblyai-settings',
-                PODLOVE_ASSEMBLYAI_URL . 'assets/js/settings.js',
+                'ai-transcripts-for-podlove-settings',
+                AI_TRANSCRIPTS_URL . 'assets/js/settings.js',
                 ['wp-api-fetch'],
-                PODLOVE_ASSEMBLYAI_VERSION,
+                AI_TRANSCRIPTS_VERSION,
                 true
             );
 
-            wp_localize_script('podlove-assemblyai-settings', 'podloveAssemblyAISettings', [
-                'restBase' => rest_url('podlove-assemblyai/v1'),
+            wp_localize_script('ai-transcripts-for-podlove-settings', 'aiTranscriptsSettings', [
+                'restBase' => rest_url('ai-transcripts-for-podlove/v1'),
                 'nonce' => wp_create_nonce('wp_rest'),
                 'adminUrl' => admin_url(),
                 'i18n' => [
-                    'transcribe' => __('Transcribe Selected', 'podlove-assemblyai'),
-                    'cancel' => __('Cancel', 'podlove-assemblyai'),
-                    'selectAll' => __('Select All', 'podlove-assemblyai'),
-                    'selectWithout' => __('Select Without Transcript', 'podlove-assemblyai'),
-                    'deselectAll' => __('Deselect All', 'podlove-assemblyai'),
-                    'processing' => __('Processing...', 'podlove-assemblyai'),
-                    'completed' => __('Completed', 'podlove-assemblyai'),
-                    'failed' => __('Failed', 'podlove-assemblyai'),
-                    'queued' => __('Queued', 'podlove-assemblyai'),
-                    'idle' => __('Idle', 'podlove-assemblyai'),
-                    'noEpisodes' => __('No episodes found.', 'podlove-assemblyai'),
-                    'loading' => __('Loading episodes...', 'podlove-assemblyai'),
-                    'batchProgress' => __('Processing %current% of %total%...', 'podlove-assemblyai'),
-                    'batchDone' => __('Batch transcription complete.', 'podlove-assemblyai'),
-                    'batchConfirmReplace' => __('The following episodes already have transcripts that will be replaced: %episodes%', 'podlove-assemblyai'),
-                    'batchConfirmYes' => __('Replace and Continue', 'podlove-assemblyai'),
-                    'batchConfirmNo' => __('Cancel', 'podlove-assemblyai'),
-                    'yes' => __('Yes', 'podlove-assemblyai'),
-                    'no' => __('No', 'podlove-assemblyai'),
+                    'transcribe' => __('Transcribe Selected', 'ai-transcripts-for-podlove'),
+                    'cancel' => __('Cancel', 'ai-transcripts-for-podlove'),
+                    'selectAll' => __('Select All', 'ai-transcripts-for-podlove'),
+                    'selectWithout' => __('Select Without Transcript', 'ai-transcripts-for-podlove'),
+                    'deselectAll' => __('Deselect All', 'ai-transcripts-for-podlove'),
+                    'processing' => __('Processing...', 'ai-transcripts-for-podlove'),
+                    'completed' => __('Completed', 'ai-transcripts-for-podlove'),
+                    'failed' => __('Failed', 'ai-transcripts-for-podlove'),
+                    'queued' => __('Queued', 'ai-transcripts-for-podlove'),
+                    'idle' => __('Idle', 'ai-transcripts-for-podlove'),
+                    'noEpisodes' => __('No episodes found.', 'ai-transcripts-for-podlove'),
+                    'loading' => __('Loading episodes...', 'ai-transcripts-for-podlove'),
+                    'batchProgress' => __('Processing %current% of %total%...', 'ai-transcripts-for-podlove'),
+                    'batchDone' => __('Batch transcription complete.', 'ai-transcripts-for-podlove'),
+                    'batchConfirmReplace' => __('The following episodes already have transcripts that will be replaced: %episodes%', 'ai-transcripts-for-podlove'),
+                    'batchConfirmYes' => __('Replace and Continue', 'ai-transcripts-for-podlove'),
+                    'batchConfirmNo' => __('Cancel', 'ai-transcripts-for-podlove'),
+                    'yes' => __('Yes', 'ai-transcripts-for-podlove'),
+                    'no' => __('No', 'ai-transcripts-for-podlove'),
                 ],
             ]);
         }
 
         ?>
         <style>
-            .podlove-assemblyai-key-status {
+            .ai-transcripts-for-podlove-key-status {
                 display: inline-block;
                 width: 24px;
                 height: 24px;
@@ -193,75 +193,75 @@ class SettingsPage
                 vertical-align: middle;
                 margin-left: 8px;
             }
-            .podlove-assemblyai-key-valid {
+            .ai-transcripts-for-podlove-key-valid {
                 background: #00a32a;
                 color: #fff;
             }
-            .podlove-assemblyai-key-invalid {
+            .ai-transcripts-for-podlove-key-invalid {
                 background: #d63638;
                 color: #fff;
             }
-            .podlove-assemblyai-key-error {
+            .ai-transcripts-for-podlove-key-error {
                 background: #dba617;
                 color: #fff;
             }
-            .podlove-assemblyai-confirm {
+            .ai-transcripts-for-podlove-confirm {
                 background: #fff8e5;
                 border-left: 4px solid #dba617;
                 padding: 12px 16px;
             }
-            .podlove-assemblyai-confirm p {
+            .ai-transcripts-for-podlove-confirm p {
                 margin: 0 0 12px;
             }
-            .podlove-assemblyai-api-key-details summary {
+            .ai-transcripts-for-podlove-api-key-details summary {
                 cursor: pointer;
                 font-size: 1.3em;
                 font-weight: 600;
                 padding: 8px 0;
             }
-            .podlove-assemblyai-api-key-details summary::-webkit-details-marker {
+            .ai-transcripts-for-podlove-api-key-details summary::-webkit-details-marker {
                 margin-right: 8px;
             }
         </style>
         <div class="wrap">
-            <h1><?php esc_html_e('Podlove AssemblyAI', 'podlove-assemblyai'); ?></h1>
+            <h1><?php esc_html_e('AI Transcripts for Podlove', 'ai-transcripts-for-podlove'); ?></h1>
 
             <?php settings_errors(self::OPTION_API_KEY); ?>
 
             <?php if ($has_key) : ?>
-                <h2><?php esc_html_e('Batch Transcription', 'podlove-assemblyai'); ?></h2>
+                <h2><?php esc_html_e('Batch Transcription', 'ai-transcripts-for-podlove'); ?></h2>
                 <p class="description">
-                    <?php esc_html_e('Select episodes to transcribe in batch. Episodes are processed one at a time.', 'podlove-assemblyai'); ?>
+                    <?php esc_html_e('Select episodes to transcribe in batch. Episodes are processed one at a time.', 'ai-transcripts-for-podlove'); ?>
                 </p>
 
-                <div id="podlove-assemblyai-batch">
-                    <p><em><?php esc_html_e('Loading episodes...', 'podlove-assemblyai'); ?></em></p>
+                <div id="ai-transcripts-for-podlove-batch">
+                    <p><em><?php esc_html_e('Loading episodes...', 'ai-transcripts-for-podlove'); ?></em></p>
                 </div>
 
                 <hr />
 
-                <details class="podlove-assemblyai-api-key-details"<?php echo ($key_status !== 'valid') ? ' open' : ''; ?>>
+                <details class="ai-transcripts-for-podlove-api-key-details"<?php echo ($key_status !== 'valid') ? ' open' : ''; ?>>
                     <summary>
-                        <?php esc_html_e('API Key', 'podlove-assemblyai'); ?>
+                        <?php esc_html_e('API Key', 'ai-transcripts-for-podlove'); ?>
                         <?php echo $this->render_key_status_indicator($key_status); ?>
                     </summary>
 
                     <form method="post" action="options.php">
-                        <?php settings_fields('podlove_assemblyai'); ?>
+                        <?php settings_fields('ai_transcripts'); ?>
                         <table class="form-table">
                             <tr>
                                 <th scope="row">
-                                    <label for="podlove_assemblyai_api_key"><?php esc_html_e('API Key', 'podlove-assemblyai'); ?></label>
+                                    <label for="ai_transcripts_api_key"><?php esc_html_e('API Key', 'ai-transcripts-for-podlove'); ?></label>
                                 </th>
                                 <td>
-                                    <input type="text" id="podlove_assemblyai_api_key" name="<?php echo esc_attr(self::OPTION_API_KEY); ?>"
+                                    <input type="text" id="ai_transcripts_api_key" name="<?php echo esc_attr(self::OPTION_API_KEY); ?>"
                                            value="<?php echo esc_attr($api_key); ?>" class="regular-text" />
                                     <?php echo $this->render_key_status_indicator($key_status); ?>
                                     <p class="description">
                                         <?php
                                         printf(
                                             /* translators: %s: link to assemblyai.com */
-                                            esc_html__('Get your API key at %s', 'podlove-assemblyai'),
+                                            esc_html__('Get your API key at %s', 'ai-transcripts-for-podlove'),
                                             '<a href="https://www.assemblyai.com/" target="_blank" rel="noopener">assemblyai.com</a>'
                                         );
                                         ?>
@@ -269,27 +269,27 @@ class SettingsPage
                                 </td>
                             </tr>
                         </table>
-                        <?php submit_button(__('Save', 'podlove-assemblyai')); ?>
+                        <?php submit_button(__('Save', 'ai-transcripts-for-podlove')); ?>
                     </form>
                 </details>
             <?php else : ?>
-                <h2><?php esc_html_e('API Key', 'podlove-assemblyai'); ?></h2>
+                <h2><?php esc_html_e('API Key', 'ai-transcripts-for-podlove'); ?></h2>
 
                 <form method="post" action="options.php">
-                    <?php settings_fields('podlove_assemblyai'); ?>
+                    <?php settings_fields('ai_transcripts'); ?>
                     <table class="form-table">
                         <tr>
                             <th scope="row">
-                                <label for="podlove_assemblyai_api_key"><?php esc_html_e('API Key', 'podlove-assemblyai'); ?></label>
+                                <label for="ai_transcripts_api_key"><?php esc_html_e('API Key', 'ai-transcripts-for-podlove'); ?></label>
                             </th>
                             <td>
-                                <input type="text" id="podlove_assemblyai_api_key" name="<?php echo esc_attr(self::OPTION_API_KEY); ?>"
+                                <input type="text" id="ai_transcripts_api_key" name="<?php echo esc_attr(self::OPTION_API_KEY); ?>"
                                        value="<?php echo esc_attr($api_key); ?>" class="regular-text" />
                                 <p class="description">
                                     <?php
                                     printf(
                                         /* translators: %s: link to assemblyai.com */
-                                        esc_html__('Get your API key at %s', 'podlove-assemblyai'),
+                                        esc_html__('Get your API key at %s', 'ai-transcripts-for-podlove'),
                                         '<a href="https://www.assemblyai.com/" target="_blank" rel="noopener">assemblyai.com</a>'
                                     );
                                     ?>
@@ -297,7 +297,7 @@ class SettingsPage
                             </td>
                         </tr>
                     </table>
-                    <?php submit_button(__('Save', 'podlove-assemblyai')); ?>
+                    <?php submit_button(__('Save', 'ai-transcripts-for-podlove')); ?>
                 </form>
             <?php endif; ?>
         </div>

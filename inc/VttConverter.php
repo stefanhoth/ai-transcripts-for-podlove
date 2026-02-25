@@ -1,6 +1,6 @@
 <?php
 
-namespace PodloveAssemblyAI;
+namespace AiTranscriptsForPodlove;
 
 class VttConverter
 {

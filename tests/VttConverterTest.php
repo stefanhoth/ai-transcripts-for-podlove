@@ -1,6 +1,6 @@
 <?php
 
-use PodloveAssemblyAI\VttConverter;
+use AiTranscriptsForPodlove\VttConverter;
 
 /**
  * @internal
