@@ -234,6 +234,9 @@ class SettingsPage
                 <p class="description">
                     <?php esc_html_e('Select episodes to transcribe in batch. Episodes are processed one at a time.', 'ai-transcripts-for-podlove'); ?>
                 </p>
+                <p class="description">
+                    💡 <?php esc_html_e('Tip: Assign contributors to an episode and the plugin will send the expected speaker count to AssemblyAI, improving speaker detection accuracy.', 'ai-transcripts-for-podlove'); ?>
+                </p>
 
                 <div id="ai-transcripts-for-podlove-batch">
                     <p><em><?php esc_html_e('Loading episodes...', 'ai-transcripts-for-podlove'); ?></em></p>

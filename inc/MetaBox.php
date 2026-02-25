@@ -71,6 +71,40 @@ class MetaBox
             ],
         ]);
 
+        $contributors_tip = $this->get_contributors_tip($post->ID);
+        if ($contributors_tip) {
+            echo '<p class="description" style="margin-bottom:8px;">💡 ' . $contributors_tip . '</p>';
+        }
+
         echo '<div id="ai-transcripts-for-podlove-metabox"></div>';
+    }
+
+    /**
+     * Return a localised tip string when the episode has no contributors assigned.
+     * Returns null when the tip is not applicable (module inactive or contributors present).
+     */
+    private function get_contributors_tip($post_id)
+    {
+        if (!\Podlove\Modules\Base::is_active('contributors')) {
+            return null;
+        }
+
+        $episode = \Podlove\Model\Episode::find_one_by_property('post_id', $post_id);
+        if (!$episode) {
+            return null;
+        }
+
+        $contributions = \Podlove\Modules\Contributors\Model\EpisodeContribution::find_all_by_episode_id($episode->id);
+        if (!empty($contributions)) {
+            return null;
+        }
+
+        return sprintf(
+            /* translators: %s: anchor link to the contributors section on the same page */
+            esc_html__('Tip: %s to help AssemblyAI detect speakers more accurately.', 'ai-transcripts-for-podlove'),
+            '<a href="#podlove_episode_contributors">'
+                . esc_html__('Add contributors to this episode', 'ai-transcripts-for-podlove')
+            . '</a>'
+        );
     }
 }

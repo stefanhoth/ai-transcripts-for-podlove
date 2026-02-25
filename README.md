@@ -11,6 +11,9 @@ Transcripts are created with speaker diarization and imported directly into the 
 - Speaker diarization (automatic speaker labels)
 - Imports as native Podlove transcripts (VTT format)
 
+> [!TIP]
+> Assign contributors to an episode in Podlove and the plugin will automatically send the expected speaker count to AssemblyAI, improving speaker detection accuracy in the transcript.
+
 ## Requirements
 
 - WordPress 6.0+
