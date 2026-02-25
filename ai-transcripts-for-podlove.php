@@ -3,7 +3,7 @@
  * Plugin Name: AI Transcripts for Podlove
  * Plugin URI: https://github.com/stefanhoth/ai-transcripts-for-podlove
  * Description: Generate transcripts for Podlove Publisher episodes using AssemblyAI. One-click transcription with speaker diarization, imported directly into the Transcripts module.
- * Version: 1.0.9
+ * Version: 1.0.10
  * Requires at least: 6.0
  * Requires PHP: 7.4
  * Author: Stefan Hoth
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('AI_TRANSCRIPTS_VERSION', '1.0.9');
+define('AI_TRANSCRIPTS_VERSION', '1.0.10');
 define('AI_TRANSCRIPTS_FILE', __FILE__);
 define('AI_TRANSCRIPTS_DIR', plugin_dir_path(__FILE__));
 define('AI_TRANSCRIPTS_URL', plugin_dir_url(__FILE__));
