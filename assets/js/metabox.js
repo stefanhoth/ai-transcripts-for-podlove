@@ -20,7 +20,7 @@
         pollTimer: null,
     };
 
-    var container = document.getElementById('ai-transcripts-metabox');
+    var container = document.getElementById('ai-transcripts-for-podlove-metabox');
     if (!container) return;
 
     // After a post-import reload, scroll back to this meta box.
