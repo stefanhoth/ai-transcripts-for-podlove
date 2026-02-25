@@ -50,7 +50,7 @@ if git -C "$REPO_DIR" rev-parse "$TAG" >/dev/null 2>&1; then
     echo "Tag $TAG already exists."
 else
     echo "Creating tag $TAG ..."
-    git -C "$REPO_DIR" tag "$TAG"
+    git -C "$REPO_DIR" tag -a "$TAG" -m "Release $TAG"
     git -C "$REPO_DIR" push origin "$TAG"
 fi
 
@@ -60,6 +60,7 @@ gh release create "$TAG" \
     --repo "$(git -C "$REPO_DIR" remote get-url origin)" \
     --title "$TAG" \
     --generate-notes \
+    --notes "" \
     "$REPO_DIR/$ZIP_NAME"
 
 echo "Done! Release $TAG published with $ZIP_NAME"
