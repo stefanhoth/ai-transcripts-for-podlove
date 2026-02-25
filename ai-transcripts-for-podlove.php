@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name: Podlove AssemblyAI
- * Plugin URI: https://github.com/stefanhoth/podlove-assemblyai
+ * Plugin Name: AI Transcripts for Podlove
+ * Plugin URI: https://github.com/stefanhoth/ai-transcripts-for-podlove
  * Description: Generate transcripts for Podlove Publisher episodes using AssemblyAI. One-click transcription with speaker diarization, imported directly into the Transcripts module.
  * Version: 1.0.0
  * Requires at least: 6.0
@@ -10,22 +10,23 @@
  * Author URI: https://stefanhoth.com
  * License: MIT
  * License URI: https://opensource.org/licenses/MIT
- * Text Domain: podlove-assemblyai
+ * Text Domain: ai-transcripts-for-podlove
  */
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-define('PODLOVE_ASSEMBLYAI_VERSION', '1.0.7');
-define('PODLOVE_ASSEMBLYAI_FILE', __FILE__);
-define('PODLOVE_ASSEMBLYAI_DIR', plugin_dir_path(__FILE__));
-define('PODLOVE_ASSEMBLYAI_URL', plugin_dir_url(__FILE__));
+define('AI_TRANSCRIPTS_VERSION', '1.0.7');
+define('AI_TRANSCRIPTS_FILE', __FILE__);
+define('AI_TRANSCRIPTS_DIR', plugin_dir_path(__FILE__));
+define('AI_TRANSCRIPTS_URL', plugin_dir_url(__FILE__));
 
-require_once PODLOVE_ASSEMBLYAI_DIR . 'inc/VttConverter.php';
-require_once PODLOVE_ASSEMBLYAI_DIR . 'inc/RestApi.php';
-require_once PODLOVE_ASSEMBLYAI_DIR . 'inc/MetaBox.php';
-require_once PODLOVE_ASSEMBLYAI_DIR . 'inc/SettingsPage.php';
+
+require_once AI_TRANSCRIPTS_DIR . 'inc/VttConverter.php';
+require_once AI_TRANSCRIPTS_DIR . 'inc/RestApi.php';
+require_once AI_TRANSCRIPTS_DIR . 'inc/MetaBox.php';
+require_once AI_TRANSCRIPTS_DIR . 'inc/SettingsPage.php';
 
 /**
  * Check if Podlove Publisher is active with the required modules.
@@ -33,7 +34,7 @@ require_once PODLOVE_ASSEMBLYAI_DIR . 'inc/SettingsPage.php';
  * Returns an empty array when all dependencies are met, or a list of
  * human-readable problems otherwise.
  */
-function podlove_assemblyai_check_dependencies() {
+function ai_transcripts_check_dependencies() {
     $problems = [];
 
     if (!class_exists('\\Podlove\\Model\\Episode')) {
@@ -60,36 +61,36 @@ function podlove_assemblyai_check_dependencies() {
 /**
  * Show admin notice when dependencies are not met.
  */
-function podlove_assemblyai_missing_dependency_notice() {
-    $problems = podlove_assemblyai_check_dependencies();
+function ai_transcripts_missing_dependency_notice() {
+    $problems = ai_transcripts_check_dependencies();
 
     if (empty($problems)) {
         return;
     }
 
     echo '<div class="notice notice-error"><p>';
-    echo '<strong>' . esc_html__('Podlove AssemblyAI', 'podlove-assemblyai') . ':</strong> ';
+    echo '<strong>' . esc_html__('AI Transcripts for Podlove', 'ai-transcripts-for-podlove') . ':</strong> ';
     echo esc_html(implode(' ', $problems));
     echo '</p></div>';
 }
-add_action('admin_notices', 'podlove_assemblyai_missing_dependency_notice');
+add_action('admin_notices', 'ai_transcripts_missing_dependency_notice');
 
 /**
  * Initialize the plugin after all plugins have loaded.
  */
-function podlove_assemblyai_init() {
-    if (!empty(podlove_assemblyai_check_dependencies())) {
+function ai_transcripts_init() {
+    if (!empty(ai_transcripts_check_dependencies())) {
         return;
     }
 
-    load_plugin_textdomain('podlove-assemblyai', false, dirname(plugin_basename(__FILE__)) . '/languages');
+    load_plugin_textdomain('ai-transcripts-for-podlove', false, dirname(plugin_basename(__FILE__)) . '/languages');
 
     add_action('rest_api_init', function () {
-        $api = new PodloveAssemblyAI\RestApi();
+        $api = new AiTranscriptsForPodlove\RestApi();
         $api->register_routes();
     });
 
-    new PodloveAssemblyAI\MetaBox();
-    new PodloveAssemblyAI\SettingsPage();
+    new AiTranscriptsForPodlove\MetaBox();
+    new AiTranscriptsForPodlove\SettingsPage();
 }
-add_action('plugins_loaded', 'podlove_assemblyai_init', 20);
+add_action('plugins_loaded', 'ai_transcripts_init', 20);

@@ -1,13 +1,13 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the Podlove AssemblyAI package.
+# This file is distributed under the same license as the AI Transcripts for Podlove package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Podlove AssemblyAI 1.0.7\n"
-"Report-Msgid-Bugs-To: https://github.com/stefanhoth/podlove-assemblyai/"
+"Project-Id-Version: AI Transcripts for Podlove 1.0.7\n"
+"Report-Msgid-Bugs-To: https://github.com/stefanhoth/ai-transcripts-for-podlove/"
 "issues\n"
 "POT-Creation-Date: 2026-02-24 15:29+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
@@ -80,8 +80,8 @@ msgstr ""
 msgid "processing"
 msgstr ""
 
-#: inc/SettingsPage.php:24 inc/SettingsPage.php:227 podlove-assemblyai.php:71
-msgid "Podlove AssemblyAI"
+#: inc/SettingsPage.php:24 inc/SettingsPage.php:227 ai-transcripts-for-podlove.php:71
+msgid "AI Transcripts for Podlove"
 msgstr ""
 
 #: inc/SettingsPage.php:25
