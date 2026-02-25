@@ -82,6 +82,15 @@ msgstr "Warteschlange"
 msgid "processing"
 msgstr "Verarbeitung"
 
+#: inc/MetaBox.php:104
+#, php-format
+msgid "Tip: %s to help AssemblyAI detect speakers more accurately."
+msgstr "Tipp: %s, damit AssemblyAI Sprecher genauer erkennen kann."
+
+#: inc/MetaBox.php:106
+msgid "Add contributors to this episode"
+msgstr "Mitwirkende zu dieser Episode hinzufügen"
+
 #: inc/SettingsPage.php:24 inc/SettingsPage.php:227 ai-transcripts-for-podlove.php:71
 msgid "AI Transcripts for Podlove"
 msgstr "KI-Transkripte für Podlove"
@@ -197,19 +206,35 @@ msgstr ""
 "Episoden für die Stapeltranskription auswählen. Episoden werden einzeln "
 "verarbeitet."
 
+#: inc/SettingsPage.php:238
+msgid ""
+"Tip: Assign contributors to an episode and the plugin will send the expected "
+"speaker count to AssemblyAI, improving speaker detection accuracy."
+msgstr ""
+"Tipp: Weise einer Episode Mitwirkende zu und das Plugin sendet die erwartete "
+"Sprecheranzahl an AssemblyAI, was die Sprechererkennung verbessert."
+
 #: inc/SettingsPage.php:245 inc/SettingsPage.php:254 inc/SettingsPage.php:276
 #: inc/SettingsPage.php:283
 msgid "API Key"
 msgstr "API-Schlüssel"
 
-#: inc/SettingsPage.php:264 inc/SettingsPage.php:292
+#: inc/SettingsPage.php:268 inc/SettingsPage.php:306
 #, php-format
-msgid "Get your API key at %s"
-msgstr "Deinen API-Schlüssel erhältst du bei %s"
+msgid "Get your API key from the %s."
+msgstr "Deinen API-Schlüssel findest du im %s."
 
 #: inc/SettingsPage.php:272 inc/SettingsPage.php:300
 msgid "Save"
 msgstr "Speichern"
+
+#: inc/SettingsPage.php:286
+#, php-format
+msgid "This plugin uses %s to generate transcripts from your podcast audio."
+msgstr "Dieses Plugin nutzt %s, um Transkripte für deine Podcast-Episoden zu erstellen."
+
+#~ msgid "Get your API key at %s"
+#~ msgstr "Deinen API-Schlüssel erhältst du bei %s"
 
 #~ msgid "AssemblyAI"
 #~ msgstr "AssemblyAI"

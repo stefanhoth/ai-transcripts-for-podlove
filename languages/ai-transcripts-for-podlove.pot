@@ -80,6 +80,15 @@ msgstr ""
 msgid "processing"
 msgstr ""
 
+#: inc/MetaBox.php:104
+#, php-format
+msgid "Tip: %s to help AssemblyAI detect speakers more accurately."
+msgstr ""
+
+#: inc/MetaBox.php:106
+msgid "Add contributors to this episode"
+msgstr ""
+
 #: inc/SettingsPage.php:24 inc/SettingsPage.php:227 ai-transcripts-for-podlove.php:71
 msgid "AI Transcripts for Podlove"
 msgstr ""
@@ -187,16 +196,30 @@ msgid ""
 "Select episodes to transcribe in batch. Episodes are processed one at a time."
 msgstr ""
 
+#: inc/SettingsPage.php:238
+msgid ""
+"Tip: Assign contributors to an episode and the plugin will send the expected "
+"speaker count to AssemblyAI, improving speaker detection accuracy."
+msgstr ""
+
 #: inc/SettingsPage.php:245 inc/SettingsPage.php:254 inc/SettingsPage.php:276
 #: inc/SettingsPage.php:283
 msgid "API Key"
 msgstr ""
 
-#: inc/SettingsPage.php:264 inc/SettingsPage.php:292
+#: inc/SettingsPage.php:268 inc/SettingsPage.php:306
 #, php-format
-msgid "Get your API key at %s"
+msgid "Get your API key from the %s."
 msgstr ""
 
 #: inc/SettingsPage.php:272 inc/SettingsPage.php:300
 msgid "Save"
+msgstr ""
+
+#~ msgid "Get your API key at %s"
+#~ msgstr ""
+
+#: inc/SettingsPage.php:286
+#, php-format
+msgid "This plugin uses %s to generate transcripts from your podcast audio."
 msgstr ""
