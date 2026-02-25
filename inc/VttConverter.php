@@ -74,7 +74,7 @@ class VttConverter
                 $word = $words[$i];
 
                 // Advance utterance pointer past utterances that end before this word
-                while ($utteranceIndex < $utteranceCount && $utterances[$utteranceIndex]['end'] < $word['start']) {
+                while ($utteranceIndex < $utteranceCount && $utterances[$utteranceIndex]['end'] <= $word['start']) {
                     ++$utteranceIndex;
                 }
 
