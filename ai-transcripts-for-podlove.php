@@ -94,3 +94,17 @@ function ai_transcripts_init() {
     new AiTranscriptsForPodlove\SettingsPage();
 }
 add_action('plugins_loaded', 'ai_transcripts_init', 20);
+
+/**
+ * Add a Settings link to the plugin row on the Plugins page.
+ */
+function ai_transcripts_add_plugin_action_links( $links ) {
+    $settings_link = sprintf(
+        '<a href="%s">%s</a>',
+        esc_url( admin_url( 'admin.php?page=' . AiTranscriptsForPodlove\SettingsPage::MENU_SLUG ) ),
+        esc_html__( 'Settings', 'ai-transcripts-for-podlove' )
+    );
+    array_unshift( $links, $settings_link );
+    return $links;
+}
+add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'ai_transcripts_add_plugin_action_links' );
