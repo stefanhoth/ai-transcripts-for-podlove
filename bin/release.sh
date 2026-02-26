@@ -32,7 +32,7 @@ if [[ -n "$BUMP_TYPE" ]]; then
     # Update CHANGELOG.md if auto-changelog is available
     if command -v npx >/dev/null 2>&1; then
         echo "=== Updating CHANGELOG.md ==="
-        (cd "$REPO_DIR" && npx --yes auto-changelog --package) \
+        (cd "$REPO_DIR" && npx --yes auto-changelog --latest-version "$NEW_VERSION") \
             || echo "Warning: auto-changelog failed, CHANGELOG.md not updated."
     else
         echo "Warning: npx not found, skipping CHANGELOG.md update." >&2

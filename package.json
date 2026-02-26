@@ -14,10 +14,9 @@
   },
   "auto-changelog": {
     "output": "CHANGELOG.md",
-    "template": "keepachangelog",
+    "template": "conventional",
     "unreleased": true,
-    "commitLimit": false,
-    "package": true
+    "commitLimit": false
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",
