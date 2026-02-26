@@ -2,7 +2,7 @@
 /node_modules/
 /dist/
 .phpunit.result.cache
-.claude/
+.claude/settings.local.json
 .DS_Store
 /mp3/
 .env*
