@@ -102,6 +102,9 @@ add_action('plugins_loaded', 'ai_transcripts_init', 20);
  * @return array Modified action links with Settings prepended.
  */
 function ai_transcripts_add_plugin_action_links( $links ) {
+    if ( ! empty( ai_transcripts_check_dependencies() ) ) {
+        return $links;
+    }
     $settings_link = sprintf(
         '<a href="%s">%s</a>',
         esc_url( admin_url( 'admin.php?page=' . AiTranscriptsForPodlove\SettingsPage::MENU_SLUG ) ),
