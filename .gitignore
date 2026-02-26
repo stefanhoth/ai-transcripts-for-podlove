@@ -1,6 +1,7 @@
 /vendor/
 /node_modules/
 /dist/
+/.wp-env/
 .phpunit.result.cache
 .claude/settings.local.json
 .DS_Store
