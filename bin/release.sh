@@ -27,7 +27,7 @@ done
 
 if [[ -n "$BUMP_TYPE" ]]; then
     echo "=== Bumping version ($BUMP_TYPE) ==="
-    NEW_VERSION=$("$SCRIPT_DIR/bump-version.sh" "$BUMP_TYPE")
+    NEW_VERSION=$(bash "$SCRIPT_DIR/bump-version.sh" "$BUMP_TYPE")
 
     # Update CHANGELOG.md if auto-changelog is available
     if command -v npx >/dev/null 2>&1; then
