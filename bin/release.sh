@@ -15,9 +15,12 @@ fi
 
 TAG="v$VERSION"
 ZIP_NAME="plugin-${PLUGIN_SLUG}-${TAG}.zip"
+DIST_DIR="$REPO_DIR/dist"
 BUILD_DIR=$(mktemp -d)
 
 echo "Building $ZIP_NAME ..."
+
+mkdir -p "$DIST_DIR"
 
 # Copy essential plugin files into a staging directory
 mkdir -p "$BUILD_DIR/$PLUGIN_SLUG"
@@ -33,11 +36,11 @@ cp -r "$REPO_DIR/languages" "$BUILD_DIR/$PLUGIN_SLUG/"
 find "$BUILD_DIR" -name '.DS_Store' -delete
 
 # Create the zip
-(cd "$BUILD_DIR" && zip -rq "$REPO_DIR/$ZIP_NAME" "$PLUGIN_SLUG")
+(cd "$BUILD_DIR" && zip -rq "$DIST_DIR/$ZIP_NAME" "$PLUGIN_SLUG")
 
 rm -rf "$BUILD_DIR"
 
-echo "Created $ZIP_NAME"
+echo "Created dist/$ZIP_NAME"
 
 # Check for uncommitted changes
 if ! git -C "$REPO_DIR" diff --quiet HEAD; then
@@ -61,6 +64,6 @@ gh release create "$TAG" \
     --title "$TAG" \
     --generate-notes \
     --notes "" \
-    "$REPO_DIR/$ZIP_NAME"
+    "$DIST_DIR/$ZIP_NAME"
 
 echo "Done! Release $TAG published with $ZIP_NAME"
