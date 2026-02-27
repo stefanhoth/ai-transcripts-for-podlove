@@ -91,7 +91,10 @@ if ! git -C "$REPO_DIR" diff --quiet HEAD; then
     exit 1
 fi
 
-# ── Tag ────────────────────────────────────────────────────────────────────────
+# ── Push commit first, then tag ────────────────────────────────────────────────
+echo "Pushing commit ..."
+git -C "$REPO_DIR" push origin HEAD
+
 if git -C "$REPO_DIR" rev-parse "$TAG" >/dev/null 2>&1; then
     echo "Tag $TAG already exists — skipping tag creation."
 else
@@ -103,10 +106,19 @@ fi
 # ── GitHub release ─────────────────────────────────────────────────────────────
 echo "Creating GitHub release $TAG ..."
 
+# Extract the release notes for this version from CHANGELOG.md
+NOTES_FILE=$(mktemp)
+if [[ -f "$REPO_DIR/CHANGELOG.md" ]]; then
+    awk "/^### \[${TAG}\]/{found=1; next} found && /^### \[/{exit} found{print}" \
+        "$REPO_DIR/CHANGELOG.md" > "$NOTES_FILE"
+fi
+
 gh release create "$TAG" \
     --repo "$(git -C "$REPO_DIR" remote get-url origin)" \
     --title "$TAG" \
-    --generate-notes \
+    --notes-file "$NOTES_FILE" \
     "$DIST_DIR/$ZIP_NAME"
+
+rm -f "$NOTES_FILE"
 
 echo "Done! Release $TAG published with $ZIP_NAME"

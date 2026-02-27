@@ -43,6 +43,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: bash bin/release.sh ${{ github.event.inputs.bump }}
-
-      - name: Push version bump commit
-        run: git push origin HEAD
