@@ -6,6 +6,7 @@
     <exclude-pattern>vendor/*</exclude-pattern>
     <exclude-pattern>node_modules/*</exclude-pattern>
     <exclude-pattern>tests/*</exclude-pattern>
+    <exclude-pattern>assets/*</exclude-pattern>
 
     <rule ref="WordPress">
         <!-- Project uses PSR-4 autoloading via Composer; WP file naming would break it -->
