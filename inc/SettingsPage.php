@@ -192,8 +192,10 @@ class SettingsPage {
 						'idle'                => __( 'Idle', 'ai-transcripts-for-podlove' ),
 						'noEpisodes'          => __( 'No episodes found.', 'ai-transcripts-for-podlove' ),
 						'loading'             => __( 'Loading episodes...', 'ai-transcripts-for-podlove' ),
+						/* translators: %current%: current episode number, %total%: total episode count */
 						'batchProgress'       => __( 'Processing %current% of %total%...', 'ai-transcripts-for-podlove' ),
 						'batchDone'           => __( 'Batch transcription complete.', 'ai-transcripts-for-podlove' ),
+						/* translators: %episodes%: comma-separated list of episode titles */
 						'batchConfirmReplace' => __( 'The following episodes already have transcripts that will be replaced: %episodes%', 'ai-transcripts-for-podlove' ),
 						'batchConfirmYes'     => __( 'Replace and Continue', 'ai-transcripts-for-podlove' ),
 						'batchConfirmNo'      => __( 'Cancel', 'ai-transcripts-for-podlove' ),
@@ -272,7 +274,7 @@ class SettingsPage {
 				<details class="ai-transcripts-for-podlove-api-key-details"<?php echo ( 'valid' !== $key_status ) ? ' open' : ''; ?>>
 					<summary>
 						<?php esc_html_e( 'API Key', 'ai-transcripts-for-podlove' ); ?>
-						<?php echo $this->render_key_status_indicator( $key_status ); ?>
+						<?php echo wp_kses_post( $this->render_key_status_indicator( $key_status ) ); ?>
 					</summary>
 
 					<form method="post" action="options.php">
@@ -285,7 +287,7 @@ class SettingsPage {
 								<td>
 									<input type="text" id="ai_transcripts_api_key" name="<?php echo esc_attr( self::OPTION_API_KEY ); ?>"
 											value="<?php echo esc_attr( $api_key ); ?>" class="regular-text" />
-									<?php echo $this->render_key_status_indicator( $key_status ); ?>
+									<?php echo wp_kses_post( $this->render_key_status_indicator( $key_status ) ); ?>
 									<p class="description">
 										<?php
 										printf(

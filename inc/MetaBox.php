@@ -91,7 +91,7 @@ class MetaBox {
 
 		$contributors_tip = $this->get_contributors_tip( $post->ID );
 		if ( $contributors_tip ) {
-			echo '<p class="description" style="margin-bottom:8px;">💡 ' . $contributors_tip . '</p>';
+			echo wp_kses_post( '<p class="description" style="margin-bottom:8px;">💡 ' . $contributors_tip . '</p>' );
 		}
 
 		echo '<div id="ai-transcripts-for-podlove-metabox"></div>';
