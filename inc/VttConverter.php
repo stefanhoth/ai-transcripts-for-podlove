@@ -12,7 +12,7 @@ namespace AiTranscriptsForPodlove;
  */
 class VttConverter {
 
-	public const MAX_SEGMENT_DURATION  = 5000; // 5 seconds in ms
+	public const MAX_SEGMENT_DURATION  = 5000; // 5 seconds in ms.
 	public const MAX_CHARS_PER_LINE    = 42;
 	public const MAX_LINES_PER_SEGMENT = 2;
 
@@ -51,12 +51,12 @@ class VttConverter {
 		$vtt = "WEBVTT\n\n";
 
 		foreach ( $segments as $index => $segment ) {
-			$startTime = self::formatTimestamp( $segment['start'] );
-			$endTime   = self::formatTimestamp( $segment['end'] );
-			$cueNumber = $index + 1;
+			$start_time = self::formatTimestamp( $segment['start'] );
+			$end_time   = self::formatTimestamp( $segment['end'] );
+			$cue_number = $index + 1;
 
-			$vtt .= "{$cueNumber}\n";
-			$vtt .= "{$startTime} --> {$endTime}\n";
+			$vtt .= "{$cue_number}\n";
+			$vtt .= "{$start_time} --> {$end_time}\n";
 
 			if ( ! empty( $segment['speaker'] ) ) {
 				$speaker = 'Speaker ' . $segment['speaker'];
@@ -83,38 +83,38 @@ class VttConverter {
 
 		// Build speaker map: word index -> speaker label.
 		// Both arrays are sorted by time, so we use a pointer walk (O(n+m)).
-		$wordCount  = count( $words );
-		$speakerMap = array();
+		$word_count  = count( $words );
+		$speaker_map = array();
 		if ( ! empty( $utterances ) ) {
-			$utteranceIndex = 0;
-			$utteranceCount = count( $utterances );
+			$utterance_index = 0;
+			$utterance_count = count( $utterances );
 
-			for ( $i = 0; $i < $wordCount; ++$i ) {
+			for ( $i = 0; $i < $word_count; ++$i ) {
 				$word = $words[ $i ];
 
 				// Advance utterance pointer past utterances that end before this word.
-				while ( $utteranceIndex < $utteranceCount && $utterances[ $utteranceIndex ]['end'] <= $word['start'] ) {
-					++$utteranceIndex;
+				while ( $utterance_index < $utterance_count && $utterances[ $utterance_index ]['end'] <= $word['start'] ) {
+					++$utterance_index;
 				}
 
-				if ( $utteranceIndex < $utteranceCount
-					&& $word['start'] >= $utterances[ $utteranceIndex ]['start']
-					&& $word['end'] <= $utterances[ $utteranceIndex ]['end'] ) {
-					$speakerMap[ $i ] = $utterances[ $utteranceIndex ]['speaker'];
+				if ( $utterance_index < $utterance_count
+					&& $word['start'] >= $utterances[ $utterance_index ]['start']
+					&& $word['end'] <= $utterances[ $utterance_index ]['end'] ) {
+					$speaker_map[ $i ] = $utterances[ $utterance_index ]['speaker'];
 				}
 			}
 		}
 
-		$segments       = array();
-		$currentSegment = null;
+		$segments        = array();
+		$current_segment = null;
 
-		for ( $i = 0; $i < $wordCount; ++$i ) {
+		for ( $i = 0; $i < $word_count; ++$i ) {
 			$word    = $words[ $i ];
-			$speaker = isset( $speakerMap[ $i ] ) ? $speakerMap[ $i ] : null;
+			$speaker = isset( $speaker_map[ $i ] ) ? $speaker_map[ $i ] : null;
 
 			// Start new segment if needed.
-			if ( null === $currentSegment ) {
-				$currentSegment = array(
+			if ( null === $current_segment ) {
+				$current_segment = array(
 					'start'   => $word['start'],
 					'end'     => $word['end'],
 					'text'    => $word['text'],
@@ -125,35 +125,35 @@ class VttConverter {
 			}
 
 			// Check if we should start a new segment.
-			$duration       = $word['end'] - $currentSegment['start'];
-			$textLength     = strlen( $currentSegment['text'] ) + 1 + strlen( $word['text'] );
-			$speakerChanged = $speaker && $currentSegment['speaker'] && $speaker !== $currentSegment['speaker'];
+			$duration        = $word['end'] - $current_segment['start'];
+			$text_length     = strlen( $current_segment['text'] ) + 1 + strlen( $word['text'] );
+			$speaker_changed = $speaker && $current_segment['speaker'] && $speaker !== $current_segment['speaker'];
 
-			$shouldBreak = $duration > self::MAX_SEGMENT_DURATION
-				|| $textLength > self::MAX_CHARS_PER_LINE * self::MAX_LINES_PER_SEGMENT
-				|| $speakerChanged;
+			$should_break = $duration > self::MAX_SEGMENT_DURATION
+				|| $text_length > self::MAX_CHARS_PER_LINE * self::MAX_LINES_PER_SEGMENT
+				|| $speaker_changed;
 
-			if ( $shouldBreak ) {
-				$segments[] = $currentSegment;
+			if ( $should_break ) {
+				$segments[] = $current_segment;
 
-				$currentSegment = array(
+				$current_segment = array(
 					'start'   => $word['start'],
 					'end'     => $word['end'],
 					'text'    => $word['text'],
-					'speaker' => $speaker ?: $currentSegment['speaker'],
+					'speaker' => $speaker ?: $current_segment['speaker'],
 				);
 			} else {
-				$currentSegment['end']   = $word['end'];
-				$currentSegment['text'] .= ' ' . $word['text'];
+				$current_segment['end']   = $word['end'];
+				$current_segment['text'] .= ' ' . $word['text'];
 				if ( $speaker ) {
-					$currentSegment['speaker'] = $speaker;
+					$current_segment['speaker'] = $speaker;
 				}
 			}
 		}
 
 		// Add final segment.
-		if ( null !== $currentSegment ) {
-			$segments[] = $currentSegment;
+		if ( null !== $current_segment ) {
+			$segments[] = $current_segment;
 		}
 
 		return $segments;
@@ -167,11 +167,11 @@ class VttConverter {
 	 * @return string formatted timestamp
 	 */
 	private static function formatTimestamp( $ms ) {
-		$totalSeconds = intdiv( (int) $ms, 1000 );
-		$hours        = intdiv( $totalSeconds, 3600 );
-		$minutes      = intdiv( $totalSeconds % 3600, 60 );
-		$seconds      = $totalSeconds % 60;
-		$milliseconds = (int) $ms % 1000;
+		$total_seconds = intdiv( (int) $ms, 1000 );
+		$hours         = intdiv( $total_seconds, 3600 );
+		$minutes       = intdiv( $total_seconds % 3600, 60 );
+		$seconds       = $total_seconds % 60;
+		$milliseconds  = (int) $ms % 1000;
 
 		return sprintf( '%02d:%02d:%02d.%03d', $hours, $minutes, $seconds, $milliseconds );
 	}
