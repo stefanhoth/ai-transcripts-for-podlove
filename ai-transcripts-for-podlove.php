@@ -5,7 +5,7 @@
  * Description: Generate transcripts for Podlove Publisher episodes using AssemblyAI. One-click transcription with speaker diarization, imported directly into the Transcripts module.
  * Version: 1.0.10
  * Requires at least: 6.0
- * Requires PHP: 7.4
+ * Requires PHP: 8.4
  * Author: Stefan Hoth
  * Author URI: https://stefanhoth.com
  * License: MIT

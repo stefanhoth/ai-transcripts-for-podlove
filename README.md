@@ -17,7 +17,7 @@ Transcripts are created with speaker diarization and imported directly into the 
 ## Requirements
 
 - WordPress 6.0+
-- PHP 7.4+
+- PHP 8.4+
 - [Podlove Podcast Publisher](https://wordpress.org/plugins/podlove-podcasting-plugin-for-wordpress/) with the **Transcripts** and **Contributors** modules enabled
 - An [AssemblyAI API key](https://www.assemblyai.com/)
 
