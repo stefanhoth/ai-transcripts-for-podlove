@@ -12,83 +12,41 @@ permissions:
 jobs:
   setup:
     runs-on: ubuntu-latest
-    container: php:8.4-cli
     steps:
       - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: composer
       - name: Verify PHP version
         run: php -v
-      - name: Install system dependencies
-        run: apt-get update -qq && apt-get install -y -qq curl unzip
-      - name: Install Composer
-        run: |
-          EXPECTED="$(curl -fsSL https://composer.github.io/installer.sig)"
-          curl -fsSL https://getcomposer.org/installer -o composer-setup.php
-          ACTUAL="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
-          if [ "$EXPECTED" != "$ACTUAL" ]; then echo 'Installer checksum mismatch' && rm composer-setup.php && exit 1; fi
-          php composer-setup.php --install-dir=/usr/local/bin --filename=composer
-          rm composer-setup.php
-      - name: Cache vendor
-        id: cache
-        uses: actions/cache@v4
-        with:
-          path: vendor/
-          key: composer-${{ hashFiles('composer.lock') }}
-      - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: composer install --no-progress --prefer-dist
+      - name: Install PHP dependencies
+        uses: ramsey/composer-install@v4
 
   lint:
     needs: setup
     runs-on: ubuntu-latest
-    container: php:8.4-cli
     steps:
       - uses: actions/checkout@v4
-      - name: Install system dependencies
-        run: apt-get update -qq && apt-get install -y -qq curl unzip
-      - name: Install Composer
-        run: |
-          EXPECTED="$(curl -fsSL https://composer.github.io/installer.sig)"
-          curl -fsSL https://getcomposer.org/installer -o composer-setup.php
-          ACTUAL="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
-          if [ "$EXPECTED" != "$ACTUAL" ]; then echo 'Installer checksum mismatch' && rm composer-setup.php && exit 1; fi
-          php composer-setup.php --install-dir=/usr/local/bin --filename=composer
-          rm composer-setup.php
-      - name: Restore vendor cache
-        id: cache
-        uses: actions/cache@v4
+      - uses: shivammathur/setup-php@v2
         with:
-          path: vendor/
-          key: composer-${{ hashFiles('composer.lock') }}
-      - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: composer install --no-progress --prefer-dist
+          php-version: '8.4'
+          tools: composer
+      - name: Install PHP dependencies
+        uses: ramsey/composer-install@v4
       - name: Run lint
         run: composer lint
 
   test:
     needs: setup
     runs-on: ubuntu-latest
-    container: php:8.4-cli
     steps:
       - uses: actions/checkout@v4
-      - name: Install system dependencies
-        run: apt-get update -qq && apt-get install -y -qq curl unzip
-      - name: Install Composer
-        run: |
-          EXPECTED="$(curl -fsSL https://composer.github.io/installer.sig)"
-          curl -fsSL https://getcomposer.org/installer -o composer-setup.php
-          ACTUAL="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
-          if [ "$EXPECTED" != "$ACTUAL" ]; then echo 'Installer checksum mismatch' && rm composer-setup.php && exit 1; fi
-          php composer-setup.php --install-dir=/usr/local/bin --filename=composer
-          rm composer-setup.php
-      - name: Restore vendor cache
-        id: cache
-        uses: actions/cache@v4
+      - uses: shivammathur/setup-php@v2
         with:
-          path: vendor/
-          key: composer-${{ hashFiles('composer.lock') }}
-      - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: composer install --no-progress --prefer-dist
+          php-version: '8.4'
+          tools: composer
+      - name: Install PHP dependencies
+        uses: ramsey/composer-install@v4
       - name: Run tests
         run: vendor/bin/phpunit
