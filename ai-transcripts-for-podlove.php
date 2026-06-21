@@ -11,6 +11,7 @@
  * License: MIT
  * License URI: https://opensource.org/licenses/MIT
  * Text Domain: ai-transcripts-for-podlove
+ * @package AiTranscriptsForPodlove
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
