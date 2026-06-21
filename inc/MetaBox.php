@@ -22,7 +22,7 @@ class MetaBox {
 	/**
 	 * Adds the meta box if an API key is configured.
 	 */
-	public function register() {
+	public function register(): void {
 		$api_key = get_option( 'ai_transcripts_api_key', '' );
 
 		if ( empty( $api_key ) ) {
@@ -41,10 +41,8 @@ class MetaBox {
 
 	/**
 	 * Renders the meta box HTML.
-	 *
-	 * @param \WP_Post $post The current post object.
 	 */
-	public function render( $post ) {
+	public function render( \WP_Post $post ): void {
 		$transcript_id = get_post_meta( $post->ID, 'assemblyai_transcript_id', true );
 		$status        = get_post_meta( $post->ID, 'assemblyai_status', true );
 
@@ -103,7 +101,7 @@ class MetaBox {
 	 * Return a localised tip string when the episode has no contributors assigned.
 	 * Returns null when the tip is not applicable (module inactive or contributors present).
 	 */
-	private function get_contributors_tip( $post_id ) {
+	private function get_contributors_tip( int $post_id ): ?string {
 		if ( ! \Podlove\Modules\Base::is_active( 'contributors' ) ) {
 			return null;
 		}

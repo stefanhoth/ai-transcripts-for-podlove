@@ -26,7 +26,7 @@ class SettingsPage {
 	/**
 	 * Registers the submenu page under Podlove or Settings.
 	 */
-	public function add_menu_page() {
+	public function add_menu_page(): void {
 		// Add as submenu under Podlove if available, otherwise under Settings.
 		global $admin_page_hooks;
 		$parent = isset( $admin_page_hooks['podlove_settings_handle'] ) ? 'podlove_settings_handle' : 'options-general.php';
@@ -44,7 +44,7 @@ class SettingsPage {
 	/**
 	 * Registers the API key setting with WordPress.
 	 */
-	public function register_settings() {
+	public function register_settings(): void {
 		register_setting(
 			'ai_transcripts',
 			self::OPTION_API_KEY,
@@ -59,7 +59,7 @@ class SettingsPage {
 	/**
 	 * Validate the API key against AssemblyAI before saving.
 	 */
-	public function validate_api_key( $value ) {
+	public function validate_api_key( string $value ): string {
 		$value = sanitize_text_field( $value );
 
 		if ( empty( $value ) ) {
@@ -102,10 +102,8 @@ class SettingsPage {
 
 	/**
 	 * Check current API key validity against AssemblyAI.
-	 *
-	 * @return string 'valid', 'invalid', 'error', or 'empty'
 	 */
-	private function check_api_key_status( $api_key ) {
+	private function check_api_key_status( string $api_key ): string {
 		if ( empty( $api_key ) ) {
 			return 'empty';
 		}
@@ -138,7 +136,7 @@ class SettingsPage {
 	/**
 	 * Render an inline status indicator for the API key.
 	 */
-	private function render_key_status_indicator( $status ) {
+	private function render_key_status_indicator( string $status ): string {
 		switch ( $status ) {
 			case 'valid':
 				return '<span class="ai-transcripts-for-podlove-key-status ai-transcripts-for-podlove-key-valid" title="'
@@ -160,7 +158,7 @@ class SettingsPage {
 	/**
 	 * Renders the settings page HTML.
 	 */
-	public function render_page() {
+	public function render_page(): void {
 		$api_key    = get_option( self::OPTION_API_KEY, '' );
 		$has_key    = ! empty( $api_key );
 		$key_status = $this->check_api_key_status( $api_key );

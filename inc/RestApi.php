@@ -23,7 +23,7 @@ class RestApi {
 	/**
 	 * Registers all REST API routes for this plugin.
 	 */
-	public function register_routes() {
+	public function register_routes(): void {
 		register_rest_route(
 			self::API_NAMESPACE,
 			'/config',
@@ -108,10 +108,8 @@ class RestApi {
 
 	/**
 	 * Checks that the current user can edit posts.
-	 *
-	 * @return true|\WP_Error
 	 */
-	public function permission_check() {
+	public function permission_check(): true|\WP_Error {
 		if ( ! current_user_can( 'edit_posts' ) ) {
 			return new \WP_Error(
 				'rest_forbidden',
@@ -125,11 +123,8 @@ class RestApi {
 
 	/**
 	 * Checks that the current user can edit the post in the request.
-	 *
-	 * @param \WP_REST_Request $request The REST request object.
-	 * @return true|\WP_Error
 	 */
-	public function permission_check_post( \WP_REST_Request $request ) {
+	public function permission_check_post( \WP_REST_Request $request ): true|\WP_Error {
 		$post_id = (int) $request->get_param( 'post_id' );
 
 		if ( ! current_user_can( 'edit_post', $post_id ) ) {
@@ -145,11 +140,8 @@ class RestApi {
 
 	/**
 	 * Returns plugin config state (API key presence, transcript existence).
-	 *
-	 * @param \WP_REST_Request $request The REST request object.
-	 * @return \WP_REST_Response
 	 */
-	public function get_config( \WP_REST_Request $request ) {
+	public function get_config( \WP_REST_Request $request ): \WP_REST_Response {
 		$api_key = get_option( 'ai_transcripts_api_key', '' );
 
 		$result = array(
@@ -171,10 +163,8 @@ class RestApi {
 
 	/**
 	 * Returns all published podcast episodes.
-	 *
-	 * @return \WP_REST_Response
 	 */
-	public function get_episodes() {
+	public function get_episodes(): \WP_REST_Response {
 		$posts = get_posts(
 			array(
 				'post_type'   => 'podcast',
@@ -221,11 +211,8 @@ class RestApi {
 
 	/**
 	 * Starts a new AssemblyAI transcription job for the given episode.
-	 *
-	 * @param \WP_REST_Request $request The REST request object.
-	 * @return \WP_REST_Response
 	 */
-	public function start_transcription( \WP_REST_Request $request ) {
+	public function start_transcription( \WP_REST_Request $request ): \WP_REST_Response {
 		$post_id = (int) $request->get_param( 'post_id' );
 		$api_key = get_option( 'ai_transcripts_api_key', '' );
 
@@ -313,11 +300,8 @@ class RestApi {
 
 	/**
 	 * Polls AssemblyAI for the current transcription status of an episode.
-	 *
-	 * @param \WP_REST_Request $request The REST request object.
-	 * @return \WP_REST_Response
 	 */
-	public function get_status( \WP_REST_Request $request ) {
+	public function get_status( \WP_REST_Request $request ): \WP_REST_Response {
 		$post_id = (int) $request->get_param( 'post_id' );
 		$api_key = get_option( 'ai_transcripts_api_key', '' );
 
@@ -371,11 +355,8 @@ class RestApi {
 
 	/**
 	 * Imports a completed AssemblyAI transcript into Podlove Transcripts.
-	 *
-	 * @param \WP_REST_Request $request The REST request object.
-	 * @return \WP_REST_Response
 	 */
-	public function import_transcript( \WP_REST_Request $request ) {
+	public function import_transcript( \WP_REST_Request $request ): \WP_REST_Response {
 		$post_id = (int) $request->get_param( 'post_id' );
 		$api_key = get_option( 'ai_transcripts_api_key', '' );
 
@@ -438,12 +419,8 @@ class RestApi {
 
 	/**
 	 * Get and validate transcript ID from post meta.
-	 *
-	 * @param int $post_id
-	 *
-	 * @return string|null valid transcript ID or null
 	 */
-	private function get_valid_transcript_id( $post_id ) {
+	private function get_valid_transcript_id( int $post_id ): ?string {
 		$transcript_id = get_post_meta( $post_id, 'assemblyai_transcript_id', true );
 
 		if ( empty( $transcript_id ) ) {
@@ -460,12 +437,8 @@ class RestApi {
 
 	/**
 	 * Find the first active audio media file URL for an episode.
-	 *
-	 * @param mixed $episode
-	 *
-	 * @return string|null audio URL or null
 	 */
-	private function get_audio_url( $episode ) {
+	private function get_audio_url( mixed $episode ): ?string {
 		$media_files = $episode->media_files();
 
 		foreach ( $media_files as $file ) {
@@ -489,14 +462,9 @@ class RestApi {
 
 	/**
 	 * Check that a URL is publicly reachable by AssemblyAI.
-	 *
-	 * Returns an error message string if the URL is invalid, or null if OK.
-	 *
-	 * @param string $url
-	 *
-	 * @return string|null error message or null
+	 * Returns an error message string if invalid, null if OK.
 	 */
-	private function validate_public_url( $url ) {
+	private function validate_public_url( string $url ): ?string {
 		$parsed = wp_parse_url( $url );
 
 		if ( ! $parsed || empty( $parsed['scheme'] ) || empty( $parsed['host'] ) ) {
@@ -523,24 +491,16 @@ class RestApi {
 	}
 
 	/**
-	 * Validate an AssemblyAI status value against the known whitelist.
-	 *
-	 * @param string $status raw status from API response
-	 *
-	 * @return string validated status or 'error' as fallback
+	 * Sanitise an AssemblyAI status against the known whitelist, falling back to 'error'.
 	 */
-	private function sanitize_assemblyai_status( $status ) {
+	private function sanitize_assemblyai_status( string $status ): string {
 		return in_array( $status, self::VALID_STATUSES, true ) ? $status : 'error';
 	}
 
 	/**
 	 * Get expected speaker count from Contributors module.
-	 *
-	 * @param mixed $episode
-	 *
-	 * @return int
 	 */
-	private function get_speakers_expected( $episode ) {
+	private function get_speakers_expected( mixed $episode ): int {
 		if ( ! \Podlove\Modules\Base::is_active( 'contributors' ) ) {
 			return 0;
 		}

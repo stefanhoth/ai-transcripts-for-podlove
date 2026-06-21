@@ -36,12 +36,8 @@ class VttConverter {
 
 	/**
 	 * Builds a WebVTT string from word-level transcript data.
-	 *
-	 * @param array $words      Word objects from AssemblyAI response.
-	 * @param array $utterances Utterance objects used for speaker assignment.
-	 * @return string WebVTT content.
 	 */
-	private static function generate_vtt_from_words( array $words, array $utterances ) {
+	private static function generate_vtt_from_words( array $words, array $utterances ): string {
 		$segments = self::create_subtitle_segments( $words, $utterances );
 
 		if ( empty( $segments ) ) {
@@ -71,12 +67,8 @@ class VttConverter {
 
 	/**
 	 * Groups words into timed subtitle segments with optional speaker labels.
-	 *
-	 * @param array $words      Word objects from AssemblyAI response.
-	 * @param array $utterances Utterance objects used for speaker assignment.
-	 * @return array Segment arrays with start, end, text and speaker keys.
 	 */
-	private static function create_subtitle_segments( $words, $utterances ) {
+	private static function create_subtitle_segments( array $words, array $utterances ): array {
 		if ( empty( $words ) ) {
 			return array();
 		}
@@ -161,12 +153,8 @@ class VttConverter {
 
 	/**
 	 * Format milliseconds to VTT timestamp (HH:MM:SS.mmm).
-	 *
-	 * @param int $ms milliseconds
-	 *
-	 * @return string formatted timestamp
 	 */
-	private static function format_timestamp( $ms ) {
+	private static function format_timestamp( int $ms ): string {
 		$total_seconds = intdiv( (int) $ms, 1000 );
 		$hours         = intdiv( $total_seconds, 3600 );
 		$minutes       = intdiv( $total_seconds % 3600, 60 );
