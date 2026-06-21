@@ -1,11 +1,9 @@
 <?php
 
 use AiTranscriptsForPodlove\VttConverter;
+use PHPUnit\Framework\Attributes\CoversNothing;
 
-/**
- * @internal
- * @coversNothing
- */
+#[CoversNothing]
 class VttConverterTest extends PHPUnit\Framework\TestCase
 {
     public function testEmptyResponseReturnsHeader()
