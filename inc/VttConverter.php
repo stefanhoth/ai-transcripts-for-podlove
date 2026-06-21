@@ -28,7 +28,7 @@ class VttConverter {
 		$utterances = isset( $response['utterances'] ) ? $response['utterances'] : array();
 
 		if ( ! empty( $words ) ) {
-			return self::generateVttFromWords( $words, $utterances );
+			return self::generate_vtt_from_words( $words, $utterances );
 		}
 
 		return "WEBVTT\n\n";
@@ -41,8 +41,8 @@ class VttConverter {
 	 * @param array $utterances Utterance objects used for speaker assignment.
 	 * @return string WebVTT content.
 	 */
-	private static function generateVttFromWords( array $words, array $utterances ) {
-		$segments = self::createSubtitleSegments( $words, $utterances );
+	private static function generate_vtt_from_words( array $words, array $utterances ) {
+		$segments = self::create_subtitle_segments( $words, $utterances );
 
 		if ( empty( $segments ) ) {
 			return "WEBVTT\n\n";
@@ -51,8 +51,8 @@ class VttConverter {
 		$vtt = "WEBVTT\n\n";
 
 		foreach ( $segments as $index => $segment ) {
-			$start_time = self::formatTimestamp( $segment['start'] );
-			$end_time   = self::formatTimestamp( $segment['end'] );
+			$start_time = self::format_timestamp( $segment['start'] );
+			$end_time   = self::format_timestamp( $segment['end'] );
 			$cue_number = $index + 1;
 
 			$vtt .= "{$cue_number}\n";
@@ -76,7 +76,7 @@ class VttConverter {
 	 * @param array $utterances Utterance objects used for speaker assignment.
 	 * @return array Segment arrays with start, end, text and speaker keys.
 	 */
-	private static function createSubtitleSegments( $words, $utterances ) {
+	private static function create_subtitle_segments( $words, $utterances ) {
 		if ( empty( $words ) ) {
 			return array();
 		}
@@ -166,7 +166,7 @@ class VttConverter {
 	 *
 	 * @return string formatted timestamp
 	 */
-	private static function formatTimestamp( $ms ) {
+	private static function format_timestamp( $ms ) {
 		$total_seconds = intdiv( (int) $ms, 1000 );
 		$hours         = intdiv( $total_seconds, 3600 );
 		$minutes       = intdiv( $total_seconds % 3600, 60 );
