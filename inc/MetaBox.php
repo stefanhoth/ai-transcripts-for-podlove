@@ -7,12 +7,21 @@
 
 namespace AiTranscriptsForPodlove;
 
+/**
+ * Registers and renders the AssemblyAI transcription meta box on episode posts.
+ */
 class MetaBox {
 
+	/**
+	 * Constructor — registers the meta box on podcast post type.
+	 */
 	public function __construct() {
 		add_action( 'add_meta_boxes_podcast', array( $this, 'register' ) );
 	}
 
+	/**
+	 * Adds the meta box if an API key is configured.
+	 */
 	public function register() {
 		$api_key = get_option( 'ai_transcripts_api_key', '' );
 
@@ -30,6 +39,11 @@ class MetaBox {
 		);
 	}
 
+	/**
+	 * Renders the meta box HTML.
+	 *
+	 * @param \WP_Post $post The current post object.
+	 */
 	public function render( $post ) {
 		$transcript_id = get_post_meta( $post->ID, 'assemblyai_transcript_id', true );
 		$status        = get_post_meta( $post->ID, 'assemblyai_status', true );

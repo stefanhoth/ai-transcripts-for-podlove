@@ -11,12 +11,18 @@ use Podlove\Model\Episode;
 use Podlove\Model\EpisodeAsset;
 use Podlove\Modules\Transcripts\Transcripts;
 
+/**
+ * Registers and handles REST API routes for transcription operations.
+ */
 class RestApi {
 
 	public const API_NAMESPACE       = 'ai-transcripts-for-podlove/v1';
 	public const ASSEMBLYAI_BASE_URL = 'https://api.assemblyai.com/v2';
 	private const VALID_STATUSES     = array( 'queued', 'processing', 'completed', 'error' );
 
+	/**
+	 * Registers all REST API routes for this plugin.
+	 */
 	public function register_routes() {
 		register_rest_route(
 			self::API_NAMESPACE,
@@ -100,6 +106,11 @@ class RestApi {
 		);
 	}
 
+	/**
+	 * Checks that the current user can edit posts.
+	 *
+	 * @return true|\WP_Error
+	 */
 	public function permission_check() {
 		if ( ! current_user_can( 'edit_posts' ) ) {
 			return new \WP_Error(
@@ -112,6 +123,12 @@ class RestApi {
 		return true;
 	}
 
+	/**
+	 * Checks that the current user can edit the post in the request.
+	 *
+	 * @param \WP_REST_Request $request The REST request object.
+	 * @return true|\WP_Error
+	 */
 	public function permission_check_post( \WP_REST_Request $request ) {
 		$post_id = (int) $request->get_param( 'post_id' );
 
@@ -126,6 +143,12 @@ class RestApi {
 		return true;
 	}
 
+	/**
+	 * Returns plugin config state (API key presence, transcript existence).
+	 *
+	 * @param \WP_REST_Request $request The REST request object.
+	 * @return \WP_REST_Response
+	 */
 	public function get_config( \WP_REST_Request $request ) {
 		$api_key = get_option( 'ai_transcripts_api_key', '' );
 
@@ -146,6 +169,11 @@ class RestApi {
 		return new \WP_REST_Response( $result );
 	}
 
+	/**
+	 * Returns all published podcast episodes.
+	 *
+	 * @return \WP_REST_Response
+	 */
 	public function get_episodes() {
 		$posts = get_posts(
 			array(
@@ -191,6 +219,12 @@ class RestApi {
 		return new \WP_REST_Response( $episodes );
 	}
 
+	/**
+	 * Starts a new AssemblyAI transcription job for the given episode.
+	 *
+	 * @param \WP_REST_Request $request The REST request object.
+	 * @return \WP_REST_Response
+	 */
 	public function start_transcription( \WP_REST_Request $request ) {
 		$post_id = (int) $request->get_param( 'post_id' );
 		$api_key = get_option( 'ai_transcripts_api_key', '' );
@@ -277,6 +311,12 @@ class RestApi {
 		);
 	}
 
+	/**
+	 * Polls AssemblyAI for the current transcription status of an episode.
+	 *
+	 * @param \WP_REST_Request $request The REST request object.
+	 * @return \WP_REST_Response
+	 */
 	public function get_status( \WP_REST_Request $request ) {
 		$post_id = (int) $request->get_param( 'post_id' );
 		$api_key = get_option( 'ai_transcripts_api_key', '' );
@@ -329,6 +369,12 @@ class RestApi {
 		return new \WP_REST_Response( $result );
 	}
 
+	/**
+	 * Imports a completed AssemblyAI transcript into Podlove Transcripts.
+	 *
+	 * @param \WP_REST_Request $request The REST request object.
+	 * @return \WP_REST_Response
+	 */
 	public function import_transcript( \WP_REST_Request $request ) {
 		$post_id = (int) $request->get_param( 'post_id' );
 		$api_key = get_option( 'ai_transcripts_api_key', '' );

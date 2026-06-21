@@ -7,16 +7,25 @@
 
 namespace AiTranscriptsForPodlove;
 
+/**
+ * Registers the admin settings page and API key option.
+ */
 class SettingsPage {
 
 	public const OPTION_API_KEY = 'ai_transcripts_api_key';
 	public const MENU_SLUG      = 'ai-transcripts-for-podlove';
 
+	/**
+	 * Constructor — hooks admin_menu and admin_init.
+	 */
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'add_menu_page' ), 50 );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
 	}
 
+	/**
+	 * Registers the submenu page under Podlove or Settings.
+	 */
 	public function add_menu_page() {
 		// Add as submenu under Podlove if available, otherwise under Settings
 		global $admin_page_hooks;
@@ -32,6 +41,9 @@ class SettingsPage {
 		);
 	}
 
+	/**
+	 * Registers the API key setting with WordPress.
+	 */
 	public function register_settings() {
 		register_setting(
 			'ai_transcripts',
@@ -145,6 +157,9 @@ class SettingsPage {
 		}
 	}
 
+	/**
+	 * Renders the settings page HTML.
+	 */
 	public function render_page() {
 		$api_key    = get_option( self::OPTION_API_KEY, '' );
 		$has_key    = ! empty( $api_key );

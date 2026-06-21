@@ -7,6 +7,9 @@
 
 namespace AiTranscriptsForPodlove;
 
+/**
+ * Converts AssemblyAI transcript JSON to WebVTT format.
+ */
 class VttConverter {
 
 	public const MAX_SEGMENT_DURATION  = 5000; // 5 seconds in ms
@@ -31,6 +34,13 @@ class VttConverter {
 		return "WEBVTT\n\n";
 	}
 
+	/**
+	 * Builds a WebVTT string from word-level transcript data.
+	 *
+	 * @param array $words      Word objects from AssemblyAI response.
+	 * @param array $utterances Utterance objects used for speaker assignment.
+	 * @return string WebVTT content.
+	 */
 	private static function generateVttFromWords( array $words, array $utterances ) {
 		$segments = self::createSubtitleSegments( $words, $utterances );
 
@@ -59,6 +69,13 @@ class VttConverter {
 		return $vtt;
 	}
 
+	/**
+	 * Groups words into timed subtitle segments with optional speaker labels.
+	 *
+	 * @param array $words      Word objects from AssemblyAI response.
+	 * @param array $utterances Utterance objects used for speaker assignment.
+	 * @return array Segment arrays with start, end, text and speaker keys.
+	 */
 	private static function createSubtitleSegments( $words, $utterances ) {
 		if ( empty( $words ) ) {
 			return array();
