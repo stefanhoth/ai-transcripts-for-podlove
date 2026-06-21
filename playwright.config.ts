@@ -22,7 +22,7 @@ export default defineConfig({
   reporter: [['list'], ['html', { open: 'never' }]],
 
   use: {
-    baseURL: process.env.WP_BASE_URL || 'http://localhost:8080',
+    baseURL: process.env.WP_BASE_URL || 'http://localhost:8888',
     // Capture traces on first retry to aid debugging.
     trace: 'on-first-retry',
     // Capture screenshots on failure.
