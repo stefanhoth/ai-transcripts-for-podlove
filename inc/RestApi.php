@@ -1,4 +1,9 @@
 <?php
+/**
+ * REST API endpoints for the AI Transcripts for Podlove plugin.
+ *
+ * @package AiTranscriptsForPodlove
+ */
 
 namespace AiTranscriptsForPodlove;
 

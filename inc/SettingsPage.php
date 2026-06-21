@@ -1,4 +1,9 @@
 <?php
+/**
+ * Settings page for the AI Transcripts for Podlove plugin.
+ *
+ * @package AiTranscriptsForPodlove
+ */
 
 namespace AiTranscriptsForPodlove;
 

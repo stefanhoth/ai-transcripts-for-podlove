@@ -1,4 +1,9 @@
 <?php
+/**
+ * VTT format converter for the AI Transcripts for Podlove plugin.
+ *
+ * @package AiTranscriptsForPodlove
+ */
 
 namespace AiTranscriptsForPodlove;
 
