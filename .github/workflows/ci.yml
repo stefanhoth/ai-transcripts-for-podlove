@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   setup:
     runs-on: ubuntu-latest
@@ -17,7 +20,13 @@ jobs:
       - name: Install system dependencies
         run: apt-get update -qq && apt-get install -y -qq curl unzip
       - name: Install Composer
-        run: curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+        run: |
+          EXPECTED="$(curl -fsSL https://composer.github.io/installer.sig)"
+          curl -fsSL https://getcomposer.org/installer -o composer-setup.php
+          ACTUAL="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
+          if [ "$EXPECTED" != "$ACTUAL" ]; then echo 'Installer checksum mismatch' && rm composer-setup.php && exit 1; fi
+          php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+          rm composer-setup.php
       - name: Cache vendor
         id: cache
         uses: actions/cache@v4
@@ -37,7 +46,13 @@ jobs:
       - name: Install system dependencies
         run: apt-get update -qq && apt-get install -y -qq curl unzip
       - name: Install Composer
-        run: curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+        run: |
+          EXPECTED="$(curl -fsSL https://composer.github.io/installer.sig)"
+          curl -fsSL https://getcomposer.org/installer -o composer-setup.php
+          ACTUAL="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
+          if [ "$EXPECTED" != "$ACTUAL" ]; then echo 'Installer checksum mismatch' && rm composer-setup.php && exit 1; fi
+          php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+          rm composer-setup.php
       - name: Restore vendor cache
         id: cache
         uses: actions/cache@v4
@@ -59,7 +74,13 @@ jobs:
       - name: Install system dependencies
         run: apt-get update -qq && apt-get install -y -qq curl unzip
       - name: Install Composer
-        run: curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+        run: |
+          EXPECTED="$(curl -fsSL https://composer.github.io/installer.sig)"
+          curl -fsSL https://getcomposer.org/installer -o composer-setup.php
+          ACTUAL="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
+          if [ "$EXPECTED" != "$ACTUAL" ]; then echo 'Installer checksum mismatch' && rm composer-setup.php && exit 1; fi
+          php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+          rm composer-setup.php
       - name: Restore vendor cache
         id: cache
         uses: actions/cache@v4
