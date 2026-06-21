@@ -27,7 +27,7 @@ class SettingsPage {
 	 * Registers the submenu page under Podlove or Settings.
 	 */
 	public function add_menu_page() {
-		// Add as submenu under Podlove if available, otherwise under Settings
+		// Add as submenu under Podlove if available, otherwise under Settings.
 		global $admin_page_hooks;
 		$parent = isset( $admin_page_hooks['podlove_settings_handle'] ) ? 'podlove_settings_handle' : 'options-general.php';
 
@@ -93,7 +93,7 @@ class SettingsPage {
 				__( 'AssemblyAI rejected this API key. Please check it and try again.', 'ai-transcripts-for-podlove' ),
 				'error'
 			);
-			return ''; // don't save invalid key
+			return ''; // Don't save invalid key.
 		}
 
 		return $value;

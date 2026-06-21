@@ -156,7 +156,7 @@ class RestApi {
 			'has_api_key' => ! empty( $api_key ),
 		);
 
-		// Optionally check transcript existence for a specific post
+		// Optionally check transcript existence for a specific post.
 		$post_id = $request->get_param( 'post_id' );
 		if ( $post_id ) {
 			$post_id                  = absint( $post_id );
@@ -255,7 +255,7 @@ class RestApi {
 			'language_detection' => true,
 		);
 
-		// Add speaker count hint from Contributors module
+		// Add speaker count hint from Contributors module.
 		$speakers_expected = $this->get_speakers_expected( $episode );
 		if ( $speakers_expected > 0 ) {
 			$payload['speakers_expected'] = $speakers_expected;
@@ -393,7 +393,7 @@ class RestApi {
 			return new \WP_REST_Response( array( 'error' => 'Episode not found' ), 404 );
 		}
 
-		// Fetch full transcript from AssemblyAI
+		// Fetch full transcript from AssemblyAI.
 		$response = wp_remote_get(
 			self::ASSEMBLYAI_BASE_URL . '/transcript/' . $transcript_id,
 			array(
@@ -424,13 +424,13 @@ class RestApi {
 			return new \WP_REST_Response( array( 'error' => 'Transcript is not yet completed' ), 400 );
 		}
 
-		// Convert to WebVTT
+		// Convert to WebVTT.
 		$vtt_content = VttConverter::convert( $body );
 
-		// Import via existing Transcripts module
+		// Import via existing Transcripts module.
 		Transcripts::parse_and_import_webvtt( $episode, $vtt_content );
 
-		// Update status
+		// Update status.
 		update_post_meta( $post_id, 'assemblyai_status', 'imported' );
 
 		return new \WP_REST_Response( array( 'success' => true ) );
@@ -450,7 +450,7 @@ class RestApi {
 			return null;
 		}
 
-		// AssemblyAI IDs are alphanumeric with hyphens
+		// AssemblyAI IDs are alphanumeric with hyphens.
 		if ( ! preg_match( '/^[a-zA-Z0-9\-]+$/', $transcript_id ) ) {
 			return null;
 		}

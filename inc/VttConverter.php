@@ -81,8 +81,8 @@ class VttConverter {
 			return array();
 		}
 
-		// Build speaker map: word index -> speaker label
-		// Both arrays are sorted by time, so we use a pointer walk (O(n+m))
+		// Build speaker map: word index -> speaker label.
+		// Both arrays are sorted by time, so we use a pointer walk (O(n+m)).
 		$wordCount  = count( $words );
 		$speakerMap = array();
 		if ( ! empty( $utterances ) ) {
@@ -92,7 +92,7 @@ class VttConverter {
 			for ( $i = 0; $i < $wordCount; ++$i ) {
 				$word = $words[ $i ];
 
-				// Advance utterance pointer past utterances that end before this word
+				// Advance utterance pointer past utterances that end before this word.
 				while ( $utteranceIndex < $utteranceCount && $utterances[ $utteranceIndex ]['end'] <= $word['start'] ) {
 					++$utteranceIndex;
 				}
@@ -112,7 +112,7 @@ class VttConverter {
 			$word    = $words[ $i ];
 			$speaker = isset( $speakerMap[ $i ] ) ? $speakerMap[ $i ] : null;
 
-			// Start new segment if needed
+			// Start new segment if needed.
 			if ( null === $currentSegment ) {
 				$currentSegment = array(
 					'start'   => $word['start'],
@@ -124,7 +124,7 @@ class VttConverter {
 				continue;
 			}
 
-			// Check if we should start a new segment
+			// Check if we should start a new segment.
 			$duration       = $word['end'] - $currentSegment['start'];
 			$textLength     = strlen( $currentSegment['text'] ) + 1 + strlen( $word['text'] );
 			$speakerChanged = $speaker && $currentSegment['speaker'] && $speaker !== $currentSegment['speaker'];
@@ -151,7 +151,7 @@ class VttConverter {
 			}
 		}
 
-		// Add final segment
+		// Add final segment.
 		if ( null !== $currentSegment ) {
 			$segments[] = $currentSegment;
 		}
