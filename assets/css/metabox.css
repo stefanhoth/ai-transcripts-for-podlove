@@ -1,41 +1,41 @@
 #ai-transcripts-metabox {
-    padding: 12px;
+	padding: 12px;
 }
 
 .ai-transcripts-status {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
 }
 
 .ai-transcripts-success {
-    color: #00a32a;
-    font-weight: 500;
-    margin-bottom: 8px;
+	color: #00a32a;
+	font-weight: 500;
+	margin-bottom: 8px;
 }
 
 .ai-transcripts-error {
-    color: #d63638;
-    margin-bottom: 8px;
+	color: #d63638;
+	margin-bottom: 8px;
 }
 
 .ai-transcripts-disabled-hint {
-    color: #646970;
-    font-style: italic;
+	color: #646970;
+	font-style: italic;
 }
 
 .ai-transcripts-confirm {
-    background: #fff8e5;
-    border-left: 4px solid #dba617;
-    padding: 12px 16px;
-    margin-bottom: 8px;
+	background: #fff8e5;
+	border-left: 4px solid #dba617;
+	padding: 12px 16px;
+	margin-bottom: 8px;
 }
 
 .ai-transcripts-confirm p {
-    margin: 0 0 12px;
+	margin: 0 0 12px;
 }
 
 .ai-transcripts-confirm-actions {
-    display: flex;
-    gap: 8px;
+	display: flex;
+	gap: 8px;
 }
