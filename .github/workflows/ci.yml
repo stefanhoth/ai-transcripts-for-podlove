@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    container: php:8.4-cli
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify PHP version
+        run: php -v
+      - name: Install system dependencies
+        run: apt-get update -qq && apt-get install -y -qq curl unzip
+      - name: Install Composer
+        run: curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+      - name: Cache vendor
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: vendor/
+          key: composer-${{ hashFiles('composer.lock') }}
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: composer install --no-progress --prefer-dist
+
+  lint:
+    needs: setup
+    runs-on: ubuntu-latest
+    container: php:8.4-cli
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install system dependencies
+        run: apt-get update -qq && apt-get install -y -qq curl unzip
+      - name: Install Composer
+        run: curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+      - name: Restore vendor cache
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: vendor/
+          key: composer-${{ hashFiles('composer.lock') }}
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: composer install --no-progress --prefer-dist
+      - name: Run lint
+        run: composer lint
+
+  test:
+    needs: setup
+    runs-on: ubuntu-latest
+    container: php:8.4-cli
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install system dependencies
+        run: apt-get update -qq && apt-get install -y -qq curl unzip
+      - name: Install Composer
+        run: curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+      - name: Restore vendor cache
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: vendor/
+          key: composer-${{ hashFiles('composer.lock') }}
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: composer install --no-progress --prefer-dist
+      - name: Run tests
+        run: vendor/bin/phpunit
