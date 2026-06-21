@@ -7,7 +7,10 @@
     <exclude-pattern>node_modules/*</exclude-pattern>
     <exclude-pattern>tests/*</exclude-pattern>
 
-    <rule ref="WordPress"/>
+    <rule ref="WordPress">
+        <!-- Project uses PSR-4 autoloading via Composer; WP file naming would break it -->
+        <exclude name="WordPress.Files.FileName"/>
+    </rule>
 
     <config name="minimum_supported_wp_version" value="6.4"/>
     <config name="text_domain" value="ai-transcripts-for-podlove"/>
