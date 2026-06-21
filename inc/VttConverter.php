@@ -113,7 +113,7 @@ class VttConverter {
 			$speaker = isset( $speakerMap[ $i ] ) ? $speakerMap[ $i ] : null;
 
 			// Start new segment if needed
-			if ( $currentSegment === null ) {
+			if ( null === $currentSegment ) {
 				$currentSegment = array(
 					'start'   => $word['start'],
 					'end'     => $word['end'],
@@ -152,7 +152,7 @@ class VttConverter {
 		}
 
 		// Add final segment
-		if ( $currentSegment !== null ) {
+		if ( null !== $currentSegment ) {
 			$segments[] = $currentSegment;
 		}
 

@@ -86,7 +86,7 @@ class SettingsPage {
 
 		$code = wp_remote_retrieve_response_code( $response );
 
-		if ( $code === 401 ) {
+		if ( 401 === $code ) {
 			add_settings_error(
 				self::OPTION_API_KEY,
 				'invalid_key',
@@ -124,7 +124,7 @@ class SettingsPage {
 
 		$code = wp_remote_retrieve_response_code( $response );
 
-		if ( $code === 401 ) {
+		if ( 401 === $code ) {
 			return 'invalid';
 		}
 
@@ -271,7 +271,7 @@ class SettingsPage {
 
 				<hr />
 
-				<details class="ai-transcripts-for-podlove-api-key-details"<?php echo ( $key_status !== 'valid' ) ? ' open' : ''; ?>>
+				<details class="ai-transcripts-for-podlove-api-key-details"<?php echo ( 'valid' !== $key_status ) ? ' open' : ''; ?>>
 					<summary>
 						<?php esc_html_e( 'API Key', 'ai-transcripts-for-podlove' ); ?>
 						<?php echo $this->render_key_status_indicator( $key_status ); ?>

@@ -198,7 +198,7 @@ class RestApi {
 
 			if ( $episode ) {
 				$audio_url      = $this->get_audio_url( $episode );
-				$has_audio      = $audio_url !== null;
+				$has_audio      = null !== $audio_url;
 				$has_transcript = \Podlove\Modules\Transcripts\Model\Transcript::exists_for_episode( $episode->id );
 
 				if ( $has_audio ) {
@@ -362,7 +362,7 @@ class RestApi {
 
 		$result = array( 'status' => $status );
 
-		if ( $status === 'error' && isset( $body['error'] ) ) {
+		if ( 'error' === $status && isset( $body['error'] ) ) {
 			$result['error'] = sanitize_text_field( $body['error'] );
 		}
 
@@ -420,7 +420,7 @@ class RestApi {
 			return new \WP_REST_Response( array( 'error' => 'Unexpected response from AssemblyAI' ), 500 );
 		}
 
-		if ( $body['status'] !== 'completed' ) {
+		if ( 'completed' !== $body['status'] ) {
 			return new \WP_REST_Response( array( 'error' => 'Transcript is not yet completed' ), 400 );
 		}
 
@@ -479,7 +479,7 @@ class RestApi {
 			}
 
 			$file_type = $asset->file_type();
-			if ( $file_type && $file_type->type === 'audio' ) {
+			if ( $file_type && 'audio' === $file_type->type ) {
 				return $file->get_file_url();
 			}
 		}
@@ -509,7 +509,7 @@ class RestApi {
 
 		$host = strtolower( $parsed['host'] );
 
-		if ( $host === 'localhost' || str_ends_with( $host, '.local' ) || str_ends_with( $host, '.internal' ) ) {
+		if ( 'localhost' === $host || str_ends_with( $host, '.local' ) || str_ends_with( $host, '.internal' ) ) {
 			return 'Audio URL points to a local address that AssemblyAI cannot reach.';
 		}
 
