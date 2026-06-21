@@ -201,7 +201,7 @@ class RestApi {
 				'title'             => get_the_title( $post->ID ),
 				'has_audio'         => $has_audio,
 				'has_transcript'    => (bool) $has_transcript,
-				'assemblyai_status' => $assemblyai_status ?: null,
+				'assemblyai_status' => ! empty( $assemblyai_status ) ? $assemblyai_status : null,
 				'url_error'         => $url_error,
 			);
 		}

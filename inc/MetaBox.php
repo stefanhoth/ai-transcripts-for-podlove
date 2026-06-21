@@ -68,8 +68,8 @@ class MetaBox {
 				'postId'        => $post->ID,
 				'restBase'      => rest_url( 'ai-transcripts-for-podlove/v1' ),
 				'nonce'         => wp_create_nonce( 'wp_rest' ),
-				'initialStatus' => $status ?: 'idle',
-				'transcriptId'  => $transcript_id ?: '',
+				'initialStatus' => ! empty( $status ) ? $status : 'idle',
+				'transcriptId'  => ! empty( $transcript_id ) ? $transcript_id : '',
 				'i18n'          => array(
 					'startTranscription' => __( 'Start Transcription', 'ai-transcripts-for-podlove' ),
 					'submitting'         => __( 'Submitting to AssemblyAI...', 'ai-transcripts-for-podlove' ),

@@ -132,7 +132,7 @@ class VttConverter {
 					'start'   => $word['start'],
 					'end'     => $word['end'],
 					'text'    => $word['text'],
-					'speaker' => $speaker ?: $current_segment['speaker'],
+					'speaker' => $speaker ? $speaker : $current_segment['speaker'],
 				);
 			} else {
 				$current_segment['end']   = $word['end'];
